@@ -1,0 +1,47 @@
+﻿
+<parameters>
+/ step_deg = 10
+</parameters>
+
+<values>
+/ r = 0
+</values>
+
+<block example>
+/ trials = [1= example]
+</block>
+
+<trial example>
+/ stimulusframes = [1=clearscreen, wall, shield_center,instr]
+/ validresponse = (203, 205)
+/ ontrialend = [
+    if (trial.example.response == 203) {
+        values.r -= parameters.step_deg;
+    } else if (trial.example.response == 205){
+        values.r += parameters.step_deg;
+    }
+]
+/ branch = [
+    trial.example;
+]
+</trial>
+
+<picture wall>
+/ items = ("Stimuli/Wall.png")
+/ size = (500px, 500px)
+/ position = (50%, 50%)
+</picture>
+
+<picture shield_center>
+/ items = ("Stimuli/Arcs/Arc56.png")
+/ size = (500px, 500px))
+/ position = (50%,50%)
+/ rotation = values.r
+/erase = false
+</picture>
+
+<text instr>
+/ items = ("Left arrow key to rotate left, right arrow key to rotate right. CTRL+Q to quit.")
+/ position = (50%, 10%)
+/ erase = false
+</text>

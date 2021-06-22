@@ -1,0 +1,39 @@
+﻿ <text sentence>
+/ items = ("The quick brown fox~njumps over the lazy dog.")
+/ fontstyle = ("Consolas", 5%, true)
+/ txbgcolor = transparent
+/ size = (50%, 20%)
+/ erase = false
+</text>
+
+<text done>
+/ items = ("DONE")
+/ position = (50%, 90%)
+/ erase = false
+</text>
+
+<block myblock>
+/ trials = [1=clicktrial]
+</block>
+
+<trial clicktrial>
+/ stimulusframes = [1=sentence, done, dot]
+/ inputdevice = mouse
+/ validresponse = (sentence, done)
+/ branch = [
+    if(trial.clicktrial.response != "done") {
+        shape.dot.hposition = 1px*trial.clicktrial.responsex;
+        shape.dot.vposition = 1px*trial.clicktrial.responsey;
+        trial.clicktrial;}
+]
+</trial>
+
+<shape dot>
+/ shape = circle
+/ size = (10px,10px)
+/ position = (-10%, -10%)
+/ color = orangered
+/ erase = false
+</shape>
+
+Hope this helps.

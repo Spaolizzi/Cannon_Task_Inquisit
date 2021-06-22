@@ -1,0 +1,241 @@
+﻿
+<usermanual>
+______________________________________________________________________________________________________________
+
+									CANNONBALL TASK
+______________________________________________________________________________________________________________
+
+by Sophie Paolizzi
+DEPENd lab
+University of North Carolina, Chapel Hill
+last updated on 18th April 2021
+______________________________________________________________________________________________________________
+
+									BACKGROUND INFO 
+______________________________________________________________________________________________________________
+
+
+_____________________________________________________________________________________________________________
+									
+									TASK DESCRIPTION	
+_____________________________________________________________________________________________________________
+In the cannonball task, participants 
+______________________________________________________________________________________________________________
+
+</usermanual>
+
+**************************************************************************************************************
+Defining background 
+**************************************************************************************************************
+<defaults>
+/ fontstyle = ("Arial", 3.5%, false, false, false, false, 5, 1)
+/ screencolor = black
+/ txbgcolor = black
+/ txcolor = white
+/ inputdevice = keyboard
+/ minimumversion = "6.1.0.0"
+/ canvasaspectratio = (4, 3) 
+</defaults>
+
+**************************************************************************************************************
+Values which will be updated during the trials
+**************************************************************************************************************	    
+<values> 
+/ instructionIndex = 0                  // Used for choosing the next set of instructions in the initial "instructions" block
+/ practiceInstructionIndex = 0          // Used for choosing the next set of instructions in the initial "practice" block
+/ blockNumber = 0     					// Counts the current block number, used for choosing the instructions at the begining of each block
+/ blockName = "practice" 				// Condition of experiment (ex: Changepoint or Oddall), used for going to the corresponding trial for each block
+										// This is used to repeat same condition trials in one block, so that the numTrialsEachBlock remains a variable and is not fixed
+
+/ percentTrialsCorrectFeedback = 0.8	// Percent of trials in each block that will show the appropriate feedback based on the response
+/ responseAndFeedbackCategory = "" 		// For each trial it stores the combination of correct/incorrect response with correct/incorrect feedback, to choose the correct feedback
+										// "CRCF" = correct response, correct feedback; "IRCF" = incorrect response, correct feedback										// "CRIF" = correct response, incorrect feedback; "IRIF" = incorrect response, incorrect feedback
+/ isThisTrialPractice = 1 				// 1 = pratice block and 2 = actual experiment block, used in the trials to choose if it is a practice block 
+/ trialCounter = 0						// In each block trials are counted to stop the block when the trialCounter reaches numTrialEachBlock
+/ experimentName = "Cannonball"
+/ responseName = ""						// Used to save instead the name like "space" or "none" instead of keyboard scancodes used by Inquisit
+/ responseTime = ""						// When space is pressed the time of response after stimulus presentation, NA if no response was given
+/ isResponseCorrect = 0					// +1 = if the response for a trial is correct, -1 = if the response is incorrect
+</values>
+
+**************************************************************************************************************
+Initializing the parameters 
+**************************************************************************************************************
+// Parameters to be fixed before the experiment
+<parameters>
+/ numTrialEachBlock = 60     			// Number of trials in each block
+/ circleDuration = 2000 					// (in ms) Amount of time that the stimuli (face) is shown
+/ stimulusAndFeedbackGapDuration = 500  // (in ms) Time after stimulus presentation is stopped and before feedback is shown
+/ feedbackDuration = 1000 				// (in ms) Amount of time the feedback is shown
+/ ITI = 2000 							// (in ms) Inter trial time - pause after showing feedback is stopped and before the next stimuli is presented
+/Degrees_cannon = 360						// for practice trial, direction where cannon points
+</parameters>
+   
+**************************************************************************************************************
+Imoportant expressions
+**************************************************************************************************************
+
+<list Cannon_Degree> // Determining whether to show the correct or incorrect feedback for a particular trial
+/ items = (0-359) // 1 = correct feedback, -1 = incorrect feedback
+/ poolsize = 360
+/ selectionmode = random
+</list>
+**************************************************************************************************************
+Common ingredients for trials
+**************************************************************************************************************
+<item introduceCannon>
+/1 = "A cannon is aimed at the circle. Indicate where you would like to place your shield to catch cannonballs with the green spot. 
+You can move the orange spot with the green and yellow buttons. Green is for fast movements and yellow is for slow movements." 
+</item>
+
+
+<item introduceShot>
+/1 = "The aim of the cannon is indicated with the black line. Hit SPACE to initiate a cannon shot."
+</item>
+
+<item introduceSpot>
+/1 = "Move the orange spot to the part of the circle, where the cannon is aimed and press SPACE."
+</item>
+
+
+<item introduceShield>
+/1 = "After the cannon is shot you will see the shield. In this case you caught the
+ball. If at least half of the ball overlaps with the shield then it is a 'catch'."
+</item>
+
+
+<item introduceMisses>
+/1 = "'You missed the cannonball. Try it again!"
+</item>
+
+<item introduceShieldMiss>
+/1 = "Now try to place the shield so that you miss the cannonball. Then hit SPACE."
+</item>
+
+
+<item RepeatMiss>
+/1 = "You caught the cannonball. Try to miss it!"
+</item>
+
+<item ConfirmMiss>
+/1 = "In this case you missed the cannonball."
+</item>
+
+
+<item Instructions_paid>
+/1 = "You can earn money by catching cannonballs in your shield. You will earn %s CENTS for catching the ball. On some trials the shield
+        will be large and on some trials it will be small. You cannot know the SIZE of the shield until the cannon
+        is fired so it is best to try to catch  the ball on every trial. You will now have some practice to get a sense of how the size of 
+		the shield varies.The location of the ball fired on the previous trial will be marked with a black line. 
+		Moreover, the location of the orange spot from the previous trial will be marked with an orange line."
+</item>
+
+<item Changepoint_Intro>
+/1 = "'You will will now need to catch cannonballs shot from a cannon. The cannon will usually remain aimed at the same location. 
+However, occasionally the cannon will be reaimed to a completely different part of the circle. To earn the most points you should center your shield 
+on the location at which the cannon is aimed.'"
+
+</item>
+
+<item Oddball_Intro>
+/1 = "You will will now need to catch cannonballs shot from a cannon that is not perfectly accurate. The cannon will usually remain aimed 
+at the same location. However, occasionally the cannon will be reaimed to a completely different part of the circle. 
+To earn the most points you should center your shield on the location at which the cannon is aimed"
+</item>
+
+
+<item TaskStartInstructions>
+/1 = "In this block everything will be exactly the same except  you will no longer see the cannon. 
+The cannon is still aiming and shooting exactly as before. You will collect points for catching balls exactly as before. But now, if you cannot see the cannon, you must place your shield 
+at the position where you think the cannon is aimed. Since you will see each ball shot from the cannon, you will be able to use the locations of past shots to inform your decision."
+</item>
+
+
+
+<shape perimeter>
+/ shape = circle
+/ size = (450, 450) 
+/ color = gray
+/ position = (50%, 50%) // fill up from is 49.5%
+/ valign = center
+</shape> 
+
+<picture cannon>
+/ items = ("Stimuli/cannon.png")
+/ onprepare = [picture.cannon.rotation = values.Cannon_Degree;]
+/ position = (50%, 50%)
+/ size = (150, 150)
+/ select = values.isThisTrialPractice
+</picture>
+
+<picture cannonball>
+/ items = ("Stimuli/graukugel.png")
+/ position = (50%, 50%)
+/ size = (10, 10)
+/ select = values.isThisTrialPractice
+</picture>
+
+<item shieldsize>
+//All potential sizes of shields
+/ 1 = "Stimuli/Arcs/Arc4.svg"
+/ 2 = "Stimuli/Arcs/Arc4.svg"
+/ 3 = "Stimuli/Arcs/Arc18.svg"
+/ 4 = "Stimuli/Arcs/Arc42.svg"
+</item>
+
+<picture shield>
+/ items = shieldsize
+/ position = (50%, 50%)
+/ size = (10, 10)
+/ select = values.isThisTrialPractice
+</picture>
+
+<trial cannon>
+// ontrialbegin: want to display circle. if practice, show cannon. 
+/ stimulusframes = [1 = perimeter, cannon]
+/ correctresponse = (" ")
+/responseinterrupt = immediate 
+
+</trial>
+
+//let participant click. where click occcurs on circle, place arc2 (tiny marker)
+
+//iti
+
+//show cannonball strike. refrence cannonloc calculation?
+
+//iti
+
+//show shield. reference shieldloc calculation?
+
+
+
+
+**************************************************************************************************************
+Common trial expressions
+**************************************************************************************************************
+// is this oddball/ is this changepoint expression
+
+<expressions>
+/ buttoninstruct1 = if (computer.touch && !computer.haskeyboard) {"tapping the card with your finger";} else {"clicking on it with your mouse";}
+/ buttoninstruct2 = if (computer.touch && !computer.haskeyboard) {"Press";} else {"Click";}
+</expressions>
+
+
+<block ShowCannon>
+/ trials = [
+	1-5 = cannon;
+]
+/ responsemode = correct
+/ recorddata = false
+</block>
+
+
+<expt>
+/ blocks = [
+	1 = ShowCannon;
+]	
+</expt>
+
+
+

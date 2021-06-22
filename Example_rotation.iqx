@@ -1,0 +1,1088 @@
+﻿**************************************************************************************************************
+Creating base stimuli 
+**************************************************************************************************************
+<item ArcPicture>
+ / 2 = "Stimuli/Arcs_2/Arc4-removebg-preview.png"
+ / 3 = "Stimuli/Arcs_2/Arc6-removebg-preview.png"
+ / 4 = "Stimuli/Arcs_2/Arc8-removebg-preview.png"
+ / 5 = "Stimuli/Arcs_2/Arc10-removebg-preview.png"
+ / 6 = "Stimuli/Arcs_2/Arc12-removebg-preview.png"
+ / 7 = "Stimuli/Arcs_2/Arc14-removebg-preview.png"
+ / 8 = "Stimuli/Arcs_2/Arc16-removebg-preview.png"
+ / 9 = "Stimuli/Arcs_2/Arc18-removebg-preview.png"
+ / 10 = "Stimuli/Arcs_2/Arc20-removebg-preview.png"
+ / 11 = "Stimuli/Arcs_2/Arc22-removebg-preview.png"
+ / 12 = "Stimuli/Arcs_2/Arc24-removebg-preview.png"
+ / 13 = "Stimuli/Arcs_2/Arc26-removebg-preview.png"
+ / 14 = "Stimuli/Arcs_2/Arc28-removebg-preview.png"
+ / 15 = "Stimuli/Arcs_2/Arc30-removebg-preview.png"
+ / 16 = "Stimuli/Arcs_2/Arc32-removebg-preview.png"
+ / 17 = "Stimuli/Arcs_2/Arc34-removebg-preview.png"
+ / 18 = "Stimuli/Arcs_2/Arc36-removebg-preview.png"
+ / 19 = "Stimuli/Arcs_2/Arc38-removebg-preview.png"
+ / 20 = "Stimuli/Arcs_2/Arc40-removebg-preview.png"
+ / 21 = "Stimuli/Arcs_2/Arc42-removebg-preview.png"
+ / 22 = "Stimuli/Arcs_2/Arc44-removebg-preview.png"
+ / 23 = "Stimuli/Arcs_2/Arc46-removebg-preview.png"
+ / 24 = "Stimuli/Arcs_2/Arc48-removebg-preview.png"
+ / 25 = "Stimuli/Arcs_2/Arc50-removebg-preview.png"
+ / 26 = "Stimuli/Arcs_2/Arc52-removebg-preview.png"
+ / 27 = "Stimuli/Arcs_2/Arc54-removebg-preview.png"
+ / 28 = "Stimuli/Arcs_2/Arc56-removebg-preview.png"
+ / 29 = "Stimuli/Arcs_2/Arc58-removebg-preview.png"
+ / 30 = "Stimuli/Arcs_2/Arc60-removebg-preview.png"
+</item>
+ 
+ <item cannonmark>
+/1 = "Stimuli/CannonTickMark.png"
+/ 2 = "Stimuli/Fixation.png"
+</item>
+
+<item Cannon>
+ / 1 = "Stimuli/cannon.png"
+ / 2 = "Stimuli/Fixation.png"
+</item>
+
+**************************************************************************************************************
+Creating image stimuli 
+**************************************************************************************************************
+<picture shield>
+/ items = ArcPicture
+/ size  = (500px, 500px)
+/ position = (50%,50%)
+/ rotation = (values.r)
+</picture>
+
+
+<text fixation>
+/ items = ("+")
+/ fontstyle = ("Arial", 10%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 80%)
+/ vjustify = center
+/ valign = center
+/ halign = center
+</text>
+
+<trial fixation>
+/ stimulusframes = [1 = fixation]
+/ trialduration = 500
+</trial>
+
+<picture cannonmark>
+/ items = cannonmark
+/ size  = (500px, 500px)
+/ position = (50%,50%)
+/ rotation = values.ang
+/ erase = false
+/ select = values.cannon
+</picture>
+
+<picture keyboard_diagram_reference>
+/ items = ("Stimuli/Keyboard_demo.svg")
+/ size  = (250px, 250px))
+/ position = (50%,85%)
+/ rotation = 0
+</picture>
+
+<picture shield_center_keys>
+/ items = ("Stimuli/Arcs_2/Arc4-removebg-preview.png")
+/ size = (500px, 500px))
+/ position = (50%, 50%)
+/ rotation = values.r
+</picture>
+
+<picture cannon>
+/ items = Cannon
+/ size = (300px, 300px)
+/ position = (50%, 50%)
+/ rotation = values.rand
+/ select = values.cannon
+</picture>
+
+<picture wall>
+/ items = ("Stimuli/Arc0.png")
+/ size = (500px, 500px)
+/ position = (50%, 50%)
+</picture>
+
+<picture cannonball>
+/ items  = ("Stimuli/cannonball.png")
+/ size = (750px, 750px)
+/ position = (50%, 50%)
+/ rotation = values.ang
+</picture>
+
+**************************************************************************************************************
+Creating Text stimuli for instructions
+**************************************************************************************************************
+
+<item Instructionsshield>
+/ 1 = "You can move the green tick mark with the keyboard keys c,v,b,and n. 
+~n Move the green tick mark to the part of the circle where the cannon is aimed."
+/ 2 = "Now, try moving the green tick mark AWAY from where the cannon is aimed. 
+~n Remember, you can move the green tick mark with the keyboard keys c,v,b,and n." 
+</item>
+
+<text Instructions_shield>
+/ items = Instructionsshield
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 15%)
+/ size = (80%, 20%)
+/ valign = center
+/ halign = center
+/ vjustify = center
+/ select = values.instructshield
+</text>
+
+
+<item Practice_ShieldSize>
+/1 = "You can earn money in this task by catching cannonballs in your shield. 
+~n You will earn <%values.centsearned%> cents each time you catch the ball. 
+~n If you miss you will not earn anything."
+/2 = "On some trials the shield will be large and on some trials it will be small. 
+~n You cannot know the size of the shield until the cannon is fired, 
+~n so it is best to try to catch the ball on every trial."
+/3 = "You'll have some practice now to get a sense of how the shield size varies." 
+</item>
+
+<text Practice_ShieldSize>
+/ items = Practice_ShieldSize
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ valign = center
+/ halign = center
+/ vjustify = center
+/ select = sequence
+</text>
+
+<text PracticeBlock_CannonMoves>
+/ items = ("Up until now, the cannon has usually aimed at the same location. 
+~n Now, the cannon will occasionally re-aim to a completely different part of the circle. 
+~n To earn the most points, you should try your best to center your shield where the cannon is aimed.")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ valign = center
+/ halign = center
+/ vjustify = center
+/ select = sequence
+</text>
+
+<item CannonNotAccurate>
+/1= "While the cannon has been pretty accurate so far in practice, 
+~n the real cannon is not perfectly accurate. 
+~n On some trials it might shoot a bit above where it is aimed
+~n and on other trials a bit below." 
+/2 = "~n Your best strategy is still to place the shield in the location where the cannon is aimed. 
+~n The cannon can still re-aim unpredictably and shots might be fired in any direction."
+</item>
+
+<text PracticeBlock_CannonNotAccurate>
+/ items = CannonNotAccurate
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+/ select = sequence
+</text>
+
+<item Practice_CannonNotVisible>
+/1= "In this block everything will be exactly the same except that you will no longer see the cannon." 
+/2 =  "The cannon is still aiming and shooting exactly as before. 
+~n You will be paid for catching balls exactly as before, 
+~n but now you must place your shield at the position where you think the cannon is aimed."
+/3 = "Since you will still see each ball shot from the cannon, 
+~n you will be able to use the locations of past shots to inform your decision."
+</item>
+
+<text PracticeBlock_CannonNotVisible>
+/ items = Practice_CannonNotVisible
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+/ select = sequence
+</text>
+
+
+<text InstructtoMiss>
+/ items = ("Now, try to place the shield so that you miss the cannonball.") 
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+</text>
+
+
+<text Spacetocontinue>
+/ items = ("Press SPACE to continue")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 85%)
+/ valign = center
+/ halign = center
+/ select = sequence
+</text>
+
+<text Lockin>
+/ items = ("press SPACE to lock in your position.")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 95%)
+/ valign = center
+/ halign = center
+/ select = sequence
+</text>
+
+<text Inst1>
+/ items = ("Use the keys to place your shield and block the cannonball")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 20%)
+/ size = (80%, 5%)
+</text>
+
+**************************************************************************************************************
+Initializing lists for probabilistic selection
+**************************************************************************************************************
+<list StayorSwitch> // Determining whether to stay or switch 
+/ items = (0, 1) // 1 = switch, 0 = stay
+/ poolsize = 100
+/ selectionmode = random
+/ itemprobabilities = (.86,.14)
+</list>
+
+<list Condition>
+/ items = (1, 2) // 1 = oddball, 2 = changepoint
+/ poolsize = 2
+/ selectionmode = random
+</list>
+
+<list previousshield>
+/ items = (0) // 1 = oddball, 2 = changepoint
+/ poolsize = 1
+</list>
+
+// sequence
+<list angle_sequence>
+/ items = (values.angStartfixed-expressions.angEnd)
+/ selectionmode = random
+/ poolsize = 60
+</list>
+
+<list angle_sequence_1>
+/ items = (values.angStartfixed-expressions.angEnd)
+/ selectionmode = random
+/ poolsize = 4
+</list>
+
+**************************************************************************************************************
+Values which will be updated during the trials
+**************************************************************************************************************	    
+<values>
+/ StaySwitch = 0 // value represented whether cannon should stay in same spot or switch to a new one: base on list?
+/ percentTrialsStay = 0.86
+/ ang = 0
+/ practiceblock = 1
+/ numTrialEachBlock = 30
+/ hitmiss = 0
+/ responseTime = ""
+/ currentArcitem = 1
+/ centsearned = .05
+/ totalearnings = 0
+/ angStartfixed = 0
+/ outcomeindex = 0 
+/ cannon = 1
+/ instructshield = 1
+/ cannonballs_caught = 0
+/ rand = 0
+
+
+//values for calculating response angle
+/ anglesize = 0
+/ r = 15
+/block = 0
+</values>
+<parameters>
+/ ChoiceTime = 4000 //how long pts have to make choice
+/ circleproportion = 0.25
+/ step_deg = 2
+/ step_deg_lg = 20
+</parameters>
+**************************************************************************************************************
+Useful expressions
+**************************************************************************************************************	 
+<expressions>
+/trialtime = parameters.ChoiceTime - trial.Instructions_BeginTask.latency 
+/percentTrialsSwitch = 1-values.percentTrialsStay
+/angEnd = if (values.angStartfixed >= 330) {
+	expressions.angEnd = values.angStartfixed - 30
+} else if (values.angStartfixed <= 330) {
+	expressions.angEnd = values.angStartfixed + 30
+}
+/ remainingTimeShieldChoice = parameters.ChoiceTime - trial.placeshield_keys.latency 
+/ centerx = 0.5*display.canvaswidth
+/ centery = 0.5*display.canvasheight
+/ circleproportion = 0.25
+/ angleup = values.r + picture.shield.currentitemnumber
+/ angledown = values.r - picture.shield.currentitemnumber
+/ angoddball = rand(0,359)
+/ centsearned = values.centsearned * values.cannonballs_caught
+//Expressions for calculating angles
+</expressions>
+**************************************************************************************************************
+Output data file columns
+**************************************************************************************************************
+<data>
+/ columns = (build,values.experimentName, subject, date, time, 						   // General information
+values.StaySwitch, values.ang)													  // Block level variables		
+</data>
+**************************************************************************************************************
+Instructions Trials
+**************************************************************************************************************	  
+
+<text Instructions_cannon>
+/ items = ("In this task, a cannon is aimed at the circle. The green tick mark on the circle
+~n is the center of a shield that can block the cannon's shot.")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1), 
+/ position = (50%, 15%)
+/ size = (90%, 15%)
+/ valign = center
+/ halign = center
+/ vjustify = center
+/ select = sequence
+</text>
+
+<trial Instructions_BeginTask>
+/ stimulusframes = [1 = wall, shield_center_keys, Instructions_cannon, cannon, Spacetocontinue]
+/ validresponse = (57)
+/ beginresponsetime = 500
+/ ontrialbegin = [
+	if (values.practiceblock == 5 || values.practiceblock == 0) {
+		values.cannon = 2;
+	} else {
+		values.cannon = 1;
+	};
+	values.StaySwitch = 0;
+	values.block = 0;
+	values.ang = 0;
+	values.practiceblock = 1;
+	values.r = rand(0, 359);
+	values.rand = values.ang;
+	]
+/ branch = [
+	return trial.Instructions_PlaceShield_delay;
+]
+
+</trial>
+
+
+<trial Instructions_PlaceShield_delay>
+/ stimulusframes = [1 = cannon, shield_center_keys, keyboard_diagram_reference, Lockin, Instructions_shield]
+/ trialduration = 200
+</trial>
+
+
+<trial Instructions_PlaceShield>
+/ stimulusframes = [1 = cannon, shield_center_keys, keyboard_diagram_reference, Lockin, Instructions_shield]
+/ validresponse = (46, 47, 48, 49, 57)
+/ correctresponse = (57)
+/ ontrialend = [
+    if (trial.Instructions_PlaceShield.response == 47) {
+        values.r -= parameters.step_deg;
+    } else if (trial.Instructions_PlaceShield.response == 48){
+        values.r += parameters.step_deg;
+    } else if (trial.Instructions_PlaceShield.response == 46) {
+        values.r -= parameters.step_deg_lg;
+    } else if (trial.Instructions_PlaceShield.response == 49){
+        values.r += parameters.step_deg_lg;
+    } else if (trial.Instructions_PlaceShield.response == 57){
+		list.previousshield.appenditem(values.r);
+		};
+	
+	if (floor(values.r/360 >= 1)){
+		values.r = values.r-360
+	} else if (floor(values.r/360 < 0)){
+		values.r = values.r+ 360
+		};
+	]
+/ branch = [
+     if (trial.Instructions_PlaceShield.response == 47) {
+        trial.Instructions_PlaceShield;
+    } else if (trial.Instructions_PlaceShield.response == 48){
+        trial.Instructions_PlaceShield;
+	} else if (trial.Instructions_PlaceShield.response == 46) {
+        trial.Instructions_PlaceShield;
+    } else if (trial.Instructions_PlaceShield.response == 49){
+        trial.Instructions_PlaceShield;
+    } else if (trial.Instructions_PlaceShield.response == 57){
+		trial.Instructions_CannonOutcome;
+	  };
+	]
+</trial>
+
+
+<trial Instructions_CannonOutcome>
+/ stimulusframes = [1 = cannon, shield_center_keys, cannonball, keyboard_diagram_reference]
+/ correctresponse = (57)
+/ trialduration = 2000
+/ beginresponsetime = 1000
+/ branch = [
+	if (values.ang <= (values.r + 10) && values.ang >= (values.r - 10)) {
+		values.hitmiss = 1;	
+		if (values.practiceblock == 1) {
+			values.outcomeindex = 3;
+			values.instructshield = 1
+		} else if (values.practiceblock == 99){
+			values.outcomeindex = 1;
+			values.instructshield = 2;
+		};
+		trial.cannon_outcome;
+	} else if (values.r + 10 >= 360){
+		if (values.ang <= (values.r + 10 - 360)) {
+			values.hitmiss = 1;	
+			if (values.practiceblock == 1) {
+				values.outcomeindex = 3;
+			} else if (values.practiceblock == 99){
+				values.outcomeindex = 1;
+			};
+			trial.cannon_outcome;
+		}
+	} else if (values.r - 10 < 0){
+		if (values.ang >= (values.r - 10 + 360)) {
+			values.hitmiss = 1;	
+			if (values.practiceblock == 1) {
+				values.outcomeindex = 3;
+			} else if (values.practiceblock == 99){
+				values.outcomeindex = 1;
+			};
+			trial.cannon_outcome;
+			}
+	} else {
+		values.hitmiss = 0;
+		if (values.practiceblock == 1){
+			values.outcomeindex = 2;
+		} else if (values.practiceblock == 99) {
+			values.outcomeindex = 4;
+			}
+		};
+		trial.cannon_outcome;
+]
+</trial>
+
+<trial Instructions_RevealShield>
+/ stimulusframes = [1 = Practice_ShieldSize, Spacetocontinue]
+/ correctresponse = (57)
+/ ontrialbegin = [
+	 values.practiceblock = 2
+	 
+]
+</trial>
+
+<trial InstructionsMiss>
+/ stimulusframes = [1 = InstructtoMiss, Spacetocontinue]
+/ validresponse = (57)
+/ ontrialbegin = [
+	values.practiceblock = 99;
+	values.instructshield = 2
+]
+/ branch = [
+	trial.Instructions_PlaceShield
+]
+</trial>
+
+<trial PracticeBlock_CannonMoves>
+/ stimulusframes = [1 = PracticeBlock_CannonMoves, Spacetocontinue]
+/ correctresponse = (57)
+/ ontrialend = [
+	values.practiceblock = 3;
+	list.angle_sequence_1.clearitems();
+	list.angle_sequence_1.appenditem(1);
+	list.angle_sequence_1.appenditem(1);
+	list.angle_sequence_1.appenditem(1);
+	list.angle_sequence_1.appenditem(rand(15, 350));
+]
+</trial>
+
+<trial PracticeBlock_CannonNotAccurate>
+/ stimulusframes = [1 = PracticeBlock_CannonNotAccurate, Spacetocontinue]
+/ correctresponse = (57)
+/ ontrialend = [
+	values.practiceblock = 4;
+	values.block = 2;
+]
+</trial>
+
+<trial PracticeBlock_CannonNotVisible>
+/ stimulusframes = [1 = PracticeBlock_CannonNotVisible, Spacetocontinue]
+/ correctresponse = (57)
+/ ontrialend = [
+	values.practiceblock = 5;
+	values.block = 2;
+]
+</trial>
+
+<item EndPractice>
+/1 = "You have completed the practice block and earned <%expressions.centsearned%>!
+~n now that you understand the game, you will play a few more rounds to earn more money."
+/2 = "In each round, the cannon will change how it fires. 
+~n You'll get a few practice trials at the beginning of each round to learn about this."
+/3 = "You'll want to figure out the best strategy each round 
+~n to catch the cannonballs and maximize your earnings.
+~n Good Luck!"
+
+</item>
+
+<text EndPractice>
+/ items = EndPractice
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+/ select = sequence
+</text>
+
+
+<trial EndPractice>
+/ stimulusframes = [1 = EndPractice, Spacetocontinue]
+/ correctresponse = (57)
+/ ontrialend = [
+	values.practiceblock = 4;
+	values.block = 2;
+]
+</trial>
+
+***************************************************************************************************
+Experimental Block instructions
+***************************************************************************************************
+
+<item start>
+/ 1 = "This is the beginning of the ODDBALL ROUND. 
+~nDuring this block you will earn <%values.centsearned%> for each cannonball you catch." 
+/2 = "This is the beginning of the CHANGE POINT ROUND. 
+~nDuring this block you will earn <%values.centsearned%> for each cannonball you catch." 
+</item>
+
+<text block_start>
+ /items = start
+ / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+/ select = values.block
+</text>
+
+
+<trial begin_block> 
+/ stimulusframes = [1 = block_start, Spacetocontinue]
+/ correctresponse = (57)
+/ recorddata = false
+/ ontrialbegin = [
+	values.totalearnings = values.totalearnings + expressions.centsearned;
+	values.block = list.Condition.nextvalue;
+	values.angStartfixed = expressions.angoddball;
+	values.practiceblock = 4;
+	list.angle_sequence.reset();
+	values.ang = list.angle_sequence.nextvalue;
+	values.rand = values.ang; 
+	if (values.block == 2) {
+		text.block_start.currentitemnumber == 2
+	} else if (values.block == 1) {
+		text.block_start.currentitemnumber == 1
+	};
+]
+/ branch = [
+	return trial.cannonisaimed
+]
+
+</trial>
+
+
+<item start_task>
+/ 1 = "You've successfully completed training and are ready to start. 
+~n Now the ODDBALL ROUND will begin. 
+~n Good Luck!" 
+/ 2 = "You've successfully completed training and are ready to start. 
+~n Now the CHANGE POINT ROUND will begin.
+~n Good Luck!" 
+</item>
+
+
+<text start_task>
+ /items = start_task
+ / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+/ select = values.block
+</text>
+
+
+
+<trial start_task> 
+/ stimulusframes = [1 = start_task, Spacetocontinue]
+/ correctresponse = (57)
+/ recorddata = false
+/ ontrialend = [
+	values.practiceblock = 0;
+	values.totalearnings = values.totalearnings + expressions.centsearned;
+	values.cannonballs_caught = 0;
+	values.angStartfixed = expressions.angoddball;
+	list.angle_sequence.clearitems();
+	list.angle_sequence.reset();
+	
+]
+</trial>
+
+<text cannonisaimed>
+ / items = ("Just like before, on each trial a cannon will aim at a location on the circle.")
+ / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+</text>
+
+<trial cannonisaimed> 
+/ stimulusframes = [1 = cannonisaimed, Spacetocontinue]
+/ correctresponse = (57)
+/ recorddata = false
+/ branch = [
+	return trial.description
+]
+</trial>
+
+<item description>
+/1 = "On most trials the cannon will fire a ball somewhere near the point of aim.
+~n However, on a few trials there will be a shot from a random direction
+~n that is equally likely to hit any location on the circle."
+/2 = "On all trials the cannon will fire a ball somewhere near the point of aim. 
+~nMost of the time the cannon will remain aimed at the same location, 
+~n but occasionally the cannon will be reaimed."
+</item>
+
+
+<text description>
+ /items = description
+ / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+/ valign = center
+/ select = values.block
+</text>
+
+<trial description> 
+/ stimulusframes = [1 = description, Spacetocontinue]
+/ correctresponse = (57)
+/ recorddata = false
+/ branch = [
+	return trial.youwillnotsee
+]
+</trial>
+
+
+<item youwillsee>
+/1 = "In this first practice, you will see the cannon. Try to place 
+ ~n your shield where it is aimed in order to catch balls and earn money.
+ ~n
+~n press SPACE to start the practice round"
+/2 = "In this next practice session you will not see the cannon, 
+ ~n but still have to infer its aim in order to catch balls and earn money.
+ ~n
+~n press SPACE to start the practice round"
+</item>
+
+<text youwillnotsee>
+/items = youwillsee
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+/ select = sequence
+</text>
+
+<trial youwillnotsee> 
+/ stimulusframes = [1 = youwillnotsee]
+/ correctresponse = (57)
+/ recorddata = false
+/ branch = [
+	return trial.mainloop
+]
+</trial>
+
+
+**************************************************************************************************************
+Core Task Trials
+**************************************************************************************************************	  
+//swictch oddball for changepoint
+
+<trial mainloop>
+/ stimulusframes = [1 = Inst1, wall]
+/ trialduration = 100
+/ recorddata = true   
+/ ontrialbegin = [ 
+values.r = rand(0, 359);
+if (values.practiceblock == 1) {
+	values.StaySwitch = 0;
+	values.ang = 0; 
+	values.rand = values.ang; 
+} else if (values.practiceblock == 99) {
+	values.StaySwitch = 0;
+	values.ang = 0;
+	values.rand = values.ang; 
+} else if (values.practiceblock == 2) {
+	values.StaySwitch = 0;
+	values.ang = 0;
+	values.rand = values.ang; 
+} else if (values.practiceblock == 3) {
+	values.ang = list.angle_sequence_1.nextvalue;
+	values.rand = values.ang; 
+	values.StaySwitch = 0;
+} else if (values.practiceblock == 4) {	
+   values.StaySwitch = list.StayorSwitch.nextvalue;
+   if (values.StaySwitch == 1){
+	   	if (values.block == 1) {
+			values.ang = expressions.angoddball;
+			values.rand = values.ang + rand(-10, 10);		
+		} else if (values.block == 2) {
+			values.angStartfixed = expressions.angoddball;
+			list.angle_sequence.clearitems();
+			list.angle_sequence.reset();
+			values.ang = list.angle_sequence.nextvalue;
+			values.rand = values.ang + rand(-10, 10);
+			}; 
+		
+   } else if (values.StaySwitch == 0) {
+		values.ang = list.angle_sequence.nextvalue;
+		values.rand = values.ang; 
+		values.rand = values.ang + rand(-15, 15);
+		}
+} else if (values.practiceblock == 5) {	
+	values.cannon = 2;
+	values.StaySwitch = list.StayorSwitch.nextvalue;
+    if (values.StaySwitch == 1){
+	   	list.angle_sequence.clearitems();
+		list.angle_sequence.reset();
+		if (values.block == 1) {
+			values.ang = expressions.angoddball;	
+		} else if (values.block == 2) {
+			values.angStartfixed = expressions.angoddball;
+			values.ang = list.angle_sequence.item(1);
+		} 
+   } else if (values.StaySwitch == 0) {
+		values.ang = list.angle_sequence.nextvalue;
+		}	
+} else if (values.practiceblock == 0) {	
+	values.cannon = 2;
+	values.StaySwitch = list.StayorSwitch.nextvalue;
+    if (values.StaySwitch == 1){
+	   	if (values.block == 1) {
+			values.ang = expressions.angoddball;	
+		} else if (values.block == 2) {
+			values.angStartfixed = expressions.angoddball;
+			list.angle_sequence.clearitems();
+			list.angle_sequence.reset();
+			values.ang = list.angle_sequence.item(1);	
+		} 
+   } else if (values.StaySwitch == 0) {
+		values.ang = list.angle_sequence.nextvalue;
+		}	
+	};
+]
+/ branch = [
+	trial.placeshield_keys;	
+]
+</trial>
+
+<trial placeshield_keys>
+/ stimulusframes = [1 = wall, shield_center_keys, cannon, Inst1, keyboard_diagram_reference]
+/ validresponse = (46, 47, 48, 49, 57)
+/ correctresponse = (57)
+/ ontrialbegin = [
+	if (values.practiceblock == 5 || values.practiceblock == 0) {
+		values.cannon = 2;
+	} else if (values.practiceblock == 4) {
+		values.cannon = 1;
+	} else {
+		values.cannon = 1;
+	};
+]
+/ ontrialend = [
+    if (trial.placeshield_keys.response == 47) {
+        values.r -= parameters.step_deg;
+    } else if (trial.placeshield_keys.response == 48){
+        values.r += parameters.step_deg;
+    }
+	else if (trial.placeshield_keys.response == 46) {
+        values.r -= parameters.step_deg_lg;
+    } else if (trial.placeshield_keys.response == 49){
+        values.r += parameters.step_deg_lg;
+	} else if (trial.placeshield_keys.response == 57){
+		list.previousshield.appenditem(values.r);
+	}
+]
+
+	
+/ branch = [
+     if (trial.placeshield_keys.response == 47) {
+        trial.placeshield_keys;
+    } else if (trial.placeshield_keys.response == 48){
+        trial.placeshield_keys;
+	} else if (trial.placeshield_keys.response == 46) {
+        trial.placeshield_keys;
+    } else if (trial.placeshield_keys.response == 49){
+        trial.placeshield_keys;
+    } else if (trial.placeshield_keys.response == 57){
+        trial.showPE;
+	};
+]
+</trial>
+
+<trial showPE> 
+/ stimulusframes = [1 = wall, Inst1, shield_center_keys, cannonball, cannon]
+/ trialduration = 2000
+/ recorddata = false
+/ ontrialbegin = [
+	if (values.practiceblock == 5 || values.practiceblock == 0) {
+		values.cannon = 2;
+	} else {
+		values.cannon = 1;
+	};
+]
+/ ontrialend = [
+	if (floor(values.r/360 >= 1)){
+		values.r = values.r-360;
+	} else if (floor(values.r/360 <= 0)){
+		values.r = values.r+ 360; 
+	 };
+]
+/ branch = [
+	trial.revealshield
+]
+
+</trial>
+
+<trial revealshield>
+/ stimulusframes = [1 = wall, shield, cannon, cannonball]
+/ validresponse = (57)
+/ correctresponse = (57)
+/ trialduration = 2000
+/ ontrialbegin = [
+	if (values.practiceblock == 5 || values.practiceblock == 0) {
+		values.cannon = 2;
+	} else {
+		values.cannon = 1;
+	};
+]
+/ branch = [
+	if (values.ang <= (values.r + picture.shield.currentitemnumber) && values.ang >= (values.r - picture.shield.currentitemnumber)){
+		values.hitmiss = 1;
+		values.outcomeindex = 5;
+		values.cannonballs_caught += 1;
+	} else if (values.r + picture.shield.currentitemnumber >= 360){
+		if (values.ang <= (values.r + picture.shield.currentitemnumber - 360)) {
+			values.hitmiss = 1;
+			values.outcomeindex = 5;
+			values.cannonballs_caught += 1;
+			}
+	} else if (values.r - picture.shield.currentitemnumber < 0){
+		if (values.ang >= (values.r - picture.shield.currentitemnumber + 360)){
+			values.hitmiss = 1;	
+			values.outcomeindex = 5;
+			values.cannonballs_caught += 1;
+		}
+	} else {
+		values.hitmiss = 0;			
+		values.outcomeindex = 6;
+		};
+	trial.cannon_outcome
+	]
+</trial>
+
+//allow participant to place shield tick mark
+//generate shield size
+//calculate hit or miss
+
+<item outcome_responses>
+ /1 = "You caught the cannonball. Try to miss it!"
+ /2 = "You missed the cannonball. Try to catch it!"
+ /3 = "After the cannon is shot you will see the shield. In this case you caught the ball. 
+ ~nAt least half of the ball must overlap with the shield to make a 'catch'"
+ /4 = "Good work. In this case, you missed the ball."
+ /5 = "Ball Caught"
+ /6 = "Ball Missed"
+</item>
+
+
+<text Outcome>
+/ items = outcome_responses
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ valign = center
+/ halign = center
+/ vjustify = center
+/ select = values.outcomeindex
+</text>
+
+
+<trial cannon_outcome>
+/ stimulusframes = [1 = Outcome]
+/ trialduration = 3000
+/ recorddata = true
+/ ontrialbegin = [
+	if (values.outcomeindex == 2) {
+		trial.cannon_outcome.trialduration = 1500;	
+	} else if (values.outcomeindex == 4) {
+		 trial.cannon_outcome.trialduration = 2000;	
+	} else if (values.outcomeindex == 1) {
+		trial.cannon_outcome.trialduration = 1500;	
+	} else if (values.outcomeindex == 3) {
+		trial.cannon_outcome.trialduration = 4000;	
+	} else if (values.outcomeindex == 6) {
+		trial.cannon_outcome.trialduration = 1000;				
+	} else if (values.outcomeindex == 5) {
+		trial.cannon_outcome.trialduration = 1000;				
+	};
+	
+]
+/ branch = [
+	if (values.outcomeindex == 2) {
+		return trial.Instructions_PlaceShield;
+	} else if (values.outcomeindex == 4) {
+		 return trial.Instructions_RevealShield;
+	} else if (values.outcomeindex == 1) {
+		return trial.Instructions_PlaceShield;
+	} else if (values.outcomeindex == 3) {
+		return trial.InstructionsMiss;
+	} else if (values.outcomeindex == 6) {
+		if (values.practiceblock != 0) {
+		}	
+	} else if (values.outcomeindex == 5) {
+		if (values.practiceblock != 0) {
+		}	
+	}; 
+]    
+</trial>
+
+
+********************************************************************************************
+Reset Blocks
+********************************************************************************************
+<item Howyoudid>
+/1 = "  In this block you caught <%values.cannonballs_caught%> of the cannonballs and earned <%expressions.centsearned%>."
+</item>
+
+<text Howyoudid>
+/ items = Howyoudid
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+/ select = sequence
+</text>
+
+
+<trial Howyoudid>
+/ stimulusframes = [1 = Howyoudid, Spacetocontinue]
+/ correctresponse = (57)
+/ ontrialend = [
+	values.totalearnings = values.totalearnings + expressions.centsearned;
+	values.angStartfixed = expressions.angoddball;
+	list.angle_sequence.reset();
+	values.ang = list.angle_sequence.nextvalue;
+	values.cannonballs_caught = 0
+]
+</trial>
+
+<item EndBlock>
+/1 = "You have completed the round and earned <%values.totalearnings%>!"
+/2 = "You have completed the round and earned <%values.totalearnings%>!"
+</item>
+
+<text EndBlock>
+/ items = EndBlock
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+/ select =  values.block
+</text>
+
+<trial EndBlock>
+/ stimulusframes = [1 = EndBlock, Spacetocontinue]
+/ correctresponse = (57)
+/ ontrialbegin = [
+	if (values.practiceblock == 4) {
+		values.practiceblock = 5;
+	}
+]
+/ branch = [
+	if (values.practiceblock == 5) {
+		trial.youwillnotsee;
+	} else if (values.practiceblock == 0) {
+		trial.start_task;
+		}
+]
+</trial>
+
+
+
+**************************************************************************************************************
+Experiment Sequence
+**************************************************************************************************************	  
+<block InstructionBlock>
+/ trials = [
+1 = Instructions_BeginTask;
+2 = Instructions_PlaceShield;
+3-4 = Instructions_RevealShield;
+5-7 = mainloop;
+8 = PracticeBlock_CannonMoves;
+9-11 = PracticeBlock_CannonNotAccurate;
+12-14 = mainloop;
+15-17 = EndPractice;
+]
+</block> 
+
+<block begin_round>
+/ trials = [
+1 = begin_block;
+2 = mainloop;
+3 = EndBlock;
+4 = mainloop;
+5 = start_task;
+]
+
+</block>
+
+<block MainBlock>
+/ onblockbegin = [
+]
+/ trials = [
+1-2 = mainloop;
+3 = Howyoudid;
+]
+</block> 
+1 = InstructionBlock;
+<expt>
+/ blocks = [
+1 = InstructionBlock;
+2 = begin_round;
+3-6 = Mainblock;
+7 = begin_round;
+8-11 = Mainblock;
+]
+
+</expt>
+
+

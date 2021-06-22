@@ -1,0 +1,25 @@
+﻿
+
+
+<trial placeshield_mouse> 
+/ ontrialbegin = [
+	picture.shield_center.hposition = -100%;
+    picture.shield_center.vposition = -100%;
+]
+/ stimulusframes = [1 = Inst1, InstTitle, wall, inst_cannon]
+/ validresponse = (wall)
+/ inputdevice = mouse
+/ recorddata = false
+/ trialduration = expressions.remainingTimeShieldChoice
+/ontrialend = [
+    values.selected_x = 1px*trial.placeshield_mouse.responsex;
+	values.selected_y = 1px*trial.placeshield_mouse.responsey;
+]
+/ branch = [
+    if(trial.placeshield_mouse.response == "wall") {
+        picture.shield_center_keys.hposition = values.selected_x;
+        picture.shield_center_keys.vposition = values.selected_y;
+		picture.shield.rotation = values.Placementangle;
+        trial.showPE;}
+]
+</trial>
