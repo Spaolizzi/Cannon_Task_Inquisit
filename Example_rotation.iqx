@@ -277,14 +277,13 @@ Initializing lists for probabilistic selection
 <list angle_sequence>
 / items = (values.angStartfixed-expressions.angEnd)
 / selectionmode = random
-/ poolsize = 60 
+/ poolsize = 100
 </list>
 
 <list angle_sequence_1>
 / items = (values.angStartfixed-expressions.angEnd)
 / selectionmode = random
-/ selectionmode = random
-/ poolsize = 4
+/ poolsize = 100
 </list>
 
 **************************************************************************************************************
@@ -309,6 +308,7 @@ Values which will be updated during the trials
 / cannonballs_missed = 0
 / rand = 0
 /trialnum = 0
+/ conc = 30
 
 
 //values for calculating response angle
@@ -329,9 +329,9 @@ Useful expressions
 /trialtime = parameters.ChoiceTime - trial.Instructions_BeginTask.latency 
 /percentTrialsSwitch = 1-values.percentTrialsStay
 /angEnd = if (values.angStartfixed >= 330) {
-	expressions.angEnd = values.angStartfixed - 30
+	expressions.angEnd = values.angStartfixed - values.conc
 } else if (values.angStartfixed <= 330) {
-	expressions.angEnd = values.angStartfixed + 30
+	expressions.angEnd = values.angStartfixed + values.conc
 }
 / remainingTimeShieldChoice = parameters.ChoiceTime - trial.placeshield_keys.latency 
 / centerx = 0.5*display.canvaswidth
@@ -392,7 +392,7 @@ Instructions Trials
 
 <trial Instructions_PlaceShield_delay>
 / stimulusframes = [1 = cannon, shield_center_keys, keyboard_diagram_reference, Lockin, Instructions_shield]
-/ trialduration = 1500
+/ trialduration = 500
 </trial>
 
 
@@ -542,7 +542,8 @@ Instructions Trials
 	if (values.trialnum >= 2) {
 		return trial.mainloop
 	} else if (values.trialnum < 2) {
-		return trial.PracticeBlock_CannonNotVisible
+		return trial.PracticeBlock_CannonNotVisible;
+		values.trialnum = 0;
 	}
 ]
 
@@ -573,9 +574,17 @@ Instructions Trials
 <trial EndPractice>
 / stimulusframes = [1 = EndPractice, Spacetocontinue]
 / correctresponse = (57)
+/ ontrialbegin = [
+	values.totalearnings = expressions.centsearned + values.totalearnings;
+]
 / ontrialend = [
 	values.practiceblock = 4;
 	values.block = 2;
+	values.trialnum = 0;
+	values.cannonballs_caught = 0;
+	values.cannonballs_caught = 0;
+	values.cannonballs_missed = 0;
+	
 ]
 </trial>
 
@@ -597,6 +606,9 @@ Instructions Trials
 / correctresponse = (57)
 / ontrialbegin = [
 	picture.keyboard_diagram_reference.vposition = 60
+]
+/ ontrialend = [
+	picture.keyboard_diagram_reference.vposition = 80
 ]
 / branch = [
 	trial.mainloop
@@ -867,6 +879,7 @@ if (values.practiceblock == 1) {
 	} else {
 		values.cannon = 1;
 	};
+	picture.keyboard_diagram_reference.vposition = 85;
 ]
 / ontrialend = [
     if (trial.placeshield_keys.response == 47) {
@@ -927,6 +940,7 @@ if (values.practiceblock == 1) {
 / stimulusframes = [1 = wall, shield, cannon, cannonball, ValueTracker]
 / validresponse = (57)
 / correctresponse = (57)
+/ beginresponsetime = 500
 / trialduration = 2000
 / ontrialbegin = [
 	if (values.practiceblock == 5 || values.practiceblock == 0) {
@@ -1130,9 +1144,8 @@ Experiment Sequence
 / onblockbegin = [
 ]
 / trials = [
-/ trials = [
-1-3 = mainloop;
-3 = Howyoudid;
+1-60 = mainloop;
+61 = Howyoudid;
 ]
 </block> 
 1 = InstructionBlock;
