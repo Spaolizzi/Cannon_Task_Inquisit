@@ -2,45 +2,45 @@
 Creating base stimuli 
 **************************************************************************************************************
 <item ArcPicture>
- / 2 = "Stimuli/Arcs_2/Arc4-removebg-preview.png"
- / 3 = "Stimuli/Arcs_2/Arc6-removebg-preview.png"
- / 4 = "Stimuli/Arcs_2/Arc8-removebg-preview.png"
- / 5 = "Stimuli/Arcs_2/Arc10-removebg-preview.png"
- / 6 = "Stimuli/Arcs_2/Arc12-removebg-preview.png"
- / 7 = "Stimuli/Arcs_2/Arc14-removebg-preview.png"
- / 8 = "Stimuli/Arcs_2/Arc16-removebg-preview.png"
- / 9 = "Stimuli/Arcs_2/Arc18-removebg-preview.png"
- / 10 = "Stimuli/Arcs_2/Arc20-removebg-preview.png"
- / 11 = "Stimuli/Arcs_2/Arc22-removebg-preview.png"
- / 12 = "Stimuli/Arcs_2/Arc24-removebg-preview.png"
- / 13 = "Stimuli/Arcs_2/Arc26-removebg-preview.png"
- / 14 = "Stimuli/Arcs_2/Arc28-removebg-preview.png"
- / 15 = "Stimuli/Arcs_2/Arc30-removebg-preview.png"
- / 16 = "Stimuli/Arcs_2/Arc32-removebg-preview.png"
- / 17 = "Stimuli/Arcs_2/Arc34-removebg-preview.png"
- / 18 = "Stimuli/Arcs_2/Arc36-removebg-preview.png"
- / 19 = "Stimuli/Arcs_2/Arc38-removebg-preview.png"
- / 20 = "Stimuli/Arcs_2/Arc40-removebg-preview.png"
- / 21 = "Stimuli/Arcs_2/Arc42-removebg-preview.png"
- / 22 = "Stimuli/Arcs_2/Arc44-removebg-preview.png"
- / 23 = "Stimuli/Arcs_2/Arc46-removebg-preview.png"
- / 24 = "Stimuli/Arcs_2/Arc48-removebg-preview.png"
- / 25 = "Stimuli/Arcs_2/Arc50-removebg-preview.png"
- / 26 = "Stimuli/Arcs_2/Arc52-removebg-preview.png"
- / 27 = "Stimuli/Arcs_2/Arc54-removebg-preview.png"
- / 28 = "Stimuli/Arcs_2/Arc56-removebg-preview.png"
- / 29 = "Stimuli/Arcs_2/Arc58-removebg-preview.png"
- / 30 = "Stimuli/Arcs_2/Arc60-removebg-preview.png"
+ / 2 = "Arc4-removebg-preview.png"
+ / 3 = "Arc6-removebg-preview.png"
+ / 4 = "Arc8-removebg-preview.png"
+ / 5 = "Arc10-removebg-preview.png"
+ / 6 = "Arc12-removebg-preview.png"
+ / 7 = "Arc14-removebg-preview.png"
+ / 8 = "Arc16-removebg-preview.png"
+ / 9 = "Arc18-removebg-preview.png"
+ / 10 = "Arc20-removebg-preview.png"
+ / 11 = "Arc22-removebg-preview.png"
+ / 12 = "Arc24-removebg-preview.png"
+ / 13 = "Arc26-removebg-preview.png"
+ / 14 = "Arc28-removebg-preview.png"
+ / 15 = "Arc30-removebg-preview.png"
+ / 16 = "Arc32-removebg-preview.png"
+ / 17 = "Arc34-removebg-preview.png"
+ / 18 = "Arc36-removebg-preview.png"
+ / 19 = "Arc38-removebg-preview.png"
+ / 20 = "Arc40-removebg-preview.png"
+ / 21 = "Arc42-removebg-preview.png"
+ / 22 = "Arc44-removebg-preview.png"
+ / 23 = "Arc46-removebg-preview.png"
+ / 24 = "Arc48-removebg-preview.png"
+ / 25 = "Arc50-removebg-preview.png"
+ / 26 = "Arc52-removebg-preview.png"
+ / 27 = "Arc54-removebg-preview.png"
+ / 28 = "Arc56-removebg-preview.png"
+ / 29 = "Arc58-removebg-preview.png"
+ / 30 = "Arc60-removebg-preview.png"
 </item>
  
  <item cannonmark>
-/1 = "Stimuli/CannonTickMark.png"
-/ 2 = "Stimuli/Fixation.png"
+/1 = "CannonTickMark.png"
+/ 2 = "Fixation.png"
 </item>
 
 <item Cannon>
- / 1 = "Stimuli/cannon.png"
- / 2 = "Stimuli/Fixation.png"
+ / 1 = "cannon.png"
+ / 2 = "Fixation.png"
 </item>
 
 **************************************************************************************************************
@@ -79,14 +79,14 @@ Creating image stimuli
 </picture>
 
 <picture keyboard_diagram_reference>
-/ items = ("Stimuli/Keyboard_demo.svg")
-/ size  = (250px, 250px))
+/ items = ("keyboard_demo.png")
+/ size  = (300px, 300px))
 / position = (50%,85%)
 / rotation = 0
 </picture>
 
 <picture shield_center_keys>
-/ items = ("Stimuli/Arcs_2/Arc4-removebg-preview.png")
+/ items = ("Arc4-removebg-preview.png")
 / size = (500px, 500px))
 / position = (50%, 50%)
 / rotation = values.r
@@ -101,13 +101,13 @@ Creating image stimuli
 </picture>
 
 <picture wall>
-/ items = ("Stimuli/Arc0.png")
+/ items = ("Arc0.png")
 / size = (500px, 500px)
 / position = (50%, 50%)
 </picture>
 
 <picture cannonball>
-/ items  = ("Stimuli/cannonball.png")
+/ items  = ("cannonball.png")
 / size = (750px, 750px)
 / position = (50%, 50%)
 / rotation = values.ang
@@ -118,7 +118,7 @@ Creating Text stimuli for instructions
 **************************************************************************************************************
 
 <item Instructionsshield>
-/ 1 = "You hgave the power to defend yourself: using the keyboard keys c,v,b,and n, 
+/ 1 = "You have the power to defend yourself: using the keyboard keys c,v,b,and n, 
 ~n move the green tick mark to the part of the circle where the cannon is aimed."
 / 2 = "Now, try moving the green tick mark AWAY from where the cannon is aimed. 
 ~n Remember, you can move with the keyboard keys c,v,b,and n." 
@@ -216,14 +216,17 @@ Creating Text stimuli for instructions
 / vjustify = center
 </text>
 
+<item spacetocontinue>
+/1= "Press SPACE to continue"
+/2 = ""
+</item>
 
 <text Spacetocontinue>
-/ items = ("Press SPACE to continue")
+/ items = spacetocontinue
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / position = (50%, 85%)
 / valign = center
 / halign = center
-/ select = sequence
 </text>
 
 <text Lockin>
@@ -308,7 +311,10 @@ Values which will be updated during the trials
 / cannonballs_missed = 0
 / rand = 0
 /trialnum = 0
-/ conc = 30
+/ conc = 18.775
+/ experimentname = "Cannonball Task"
+/ blocknum = 0
+/pacetocontinue = 1
 
 
 //values for calculating response angle
@@ -320,7 +326,7 @@ Values which will be updated during the trials
 / ChoiceTime = 4000 //how long pts have to make choice
 / circleproportion = 0.25
 / step_deg = 2
-/ step_deg_lg = 20
+/ step_deg_lg = 15
 </parameters>
 **************************************************************************************************************
 Useful expressions
@@ -341,15 +347,20 @@ Useful expressions
 / angledown = values.r - picture.shield.currentitemnumber
 / angoddball = rand(0,359)
 / centsearned = values.centsearned * values.cannonballs_caught
-/ angrand = randgaussian(values.angmu, 18.775)
+/ angrand = randgaussian(values.angmu, values.conc)
 //Expressions for calculating angles
 </expressions>
 **************************************************************************************************************
 Output data file columns
 **************************************************************************************************************
 <data>
-/ columns = (build,values.experimentName, subject, date, time, 						   // General information
-values.StaySwitch, values.ang)													  // Block level variables		
+/ columns = (build, values.experimentName, subject, date, time, 	 // General information
+values.block, values.StaySwitch, 
+values.conc, values.trialnum, values.outcomeindex, 
+values.practiceblock, values.cannon,
+values.ang, values.angmu,, values.cannonballs_caught, values.cannonballs_missed, 
+values.r,  
+values.centsearned, values.totalearnings) // Block level variables		
 </data>
 **************************************************************************************************************
 Instructions Trials
@@ -812,6 +823,7 @@ if (values.practiceblock == 1) {
    values.StaySwitch = list.StayorSwitch.nextvalue;
    if (values.StaySwitch == 1){
 	   if (values.block == 1) {
+			picture.cannon.rotation = expressions.angrand;
 			values.ang = expressions.angoddball;		
 		} else if (values.block == 2) {
 			values.angmu = expressions.angoddball;
@@ -835,16 +847,16 @@ if (values.practiceblock == 1) {
 		}	
 } else if (values.practiceblock == 0) {
 	values.cannon = 2;
+	values.trialnum += 1;
 	values.StaySwitch = list.StayorSwitch.nextvalue;
     if (values.StaySwitch == 1){
-		if (values.block == 1) {
-			values.ang = expressions.angoddball;	
-		} else if (values.block == 2) {
+		if (values.block == 2) {
 			values.angmu = expressions.angoddball;
-			values.ang =  expressions.angrand;
+		} else if (values.block ==1) {
+			values.ang = expressions.angoddball;
+		}
    } else if (values.StaySwitch == 0) {
-		values.ang = expressions.angrand;
-		}	
+	   values.ang = expressions.angrand;
 	}
 };
 ]
@@ -898,8 +910,16 @@ if (values.practiceblock == 1) {
 ]
 </trial>
 
+<text trialcounter>
+/items = ("trial: <%values.trialnum%>")
+/ position = (80, 15)
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ valign = center
+/ halign = center
+</text>
+
 <trial showPE> 
-/ stimulusframes = [1 = wall, Inst1, shield_center_keys, cannonball, cannon, ValueTracker]
+/ stimulusframes = [1 = wall, Inst1, shield_center_keys, cannonball, cannon, trialcounter]
 / trialduration = 2000
 / recorddata = false
 / ontrialbegin = [
@@ -923,7 +943,7 @@ if (values.practiceblock == 1) {
 </trial>
 
 <trial revealshield>
-/ stimulusframes = [1 = wall, shield, cannon, cannonball, ValueTracker]
+/ stimulusframes = [1 = wall, shield, cannon, cannonball]
 / validresponse = (57)
 / correctresponse = (57)
 / beginresponsetime = 500
@@ -969,7 +989,7 @@ if (values.practiceblock == 1) {
  /1 = "You caught the cannonball. Try to miss it!"
  /2 = "You missed the cannonball. Try to catch it!"
  /3 = "After the cannon is shot you will see the shield. In this case you caught the ball. 
- ~nAt least half of the ball must overlap with the shield to make a 'catch'"
+ ~n More than half of the ball must overlap with the shield to make a 'catch'"
  /4 = "Good work. In this case, you missed the ball."
  /5 = "Ball Caught"
  /6 = "Ball Missed"
@@ -989,8 +1009,8 @@ if (values.practiceblock == 1) {
 
 
 <trial cannon_outcome>
-/ stimulusframes = [1 = Outcome, ValueTracker]
-/ trialduration = 3000
+/ stimulusframes = [1 = Outcome]
+/ trialduration = 500
 / recorddata = true
 / ontrialbegin = [
 	if (values.outcomeindex == 2) {
@@ -1002,9 +1022,9 @@ if (values.practiceblock == 1) {
 	} else if (values.outcomeindex == 3) {
 		trial.cannon_outcome.trialduration = 4000;	
 	} else if (values.outcomeindex == 6) {
-		trial.cannon_outcome.trialduration = 1000;				
+		trial.cannon_outcome.trialduration = 500;				
 	} else if (values.outcomeindex == 5) {
-		trial.cannon_outcome.trialduration = 1000;			
+		trial.cannon_outcome.trialduration = 500;			
 	};
 ]
 
@@ -1030,7 +1050,17 @@ if (values.practiceblock == 1) {
 			}
 		}
 	}; 
-]    
+]   
+
+/ ontrialend = [
+	values.StaySwitch = list.StayorSwitch.nextvalue
+	if (values.StaySwitch == 1){
+		if (values.block == 2) {
+			values.ang = expressions.angrand;
+		}
+	}
+]
+
 </trial>
 
 
@@ -1127,10 +1157,13 @@ Experiment Sequence
 
 <block MainBlock>
 / onblockbegin = [
+	values.blocknum += 1;
+	values.trialnum = 0;
+
 ]
 / trials = [
-1-6 = mainloop;
-7 = Howyoudid;
+1-60 = mainloop;
+61 = Howyoudid;
 ]
 </block> 
 1 = InstructionBlock;
