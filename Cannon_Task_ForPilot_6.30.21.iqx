@@ -79,18 +79,27 @@ Creating image stimuli
 </picture>
 
 <picture keyboard_diagram_reference>
-/ items = ("keyboard_demo.png")
+/ items = ("keyboard_demo.svg")
 / size  = (300px, 300px))
 / position = (50%,85%)
 / rotation = 0
 </picture>
 
-<picture shield_center_keys>
+<picture shield_center>
 / items = ("Arc4-removebg-preview.png")
 / size = (500px, 500px))
 / position = (50%, 50%)
-/ rotation = values.r
+/ rotation = values.Placementangle
 </picture>
+
+
+<shape responsearea>
+/ shape = circle
+/ size = (435px, 435px)
+/ position = (50%, 50%)
+/ color = white
+</shape>
+
 
 <picture cannon>
 / items = Cannon
@@ -98,12 +107,6 @@ Creating image stimuli
 / position = (50%, 50%)
 / rotation = values.rand
 / select = values.cannon
-</picture>
-
-<picture wall>
-/ items = ("Arc0.png")
-/ size = (500px, 500px)
-/ position = (50%, 50%)
 </picture>
 
 <picture cannonball>
@@ -118,10 +121,10 @@ Creating Text stimuli for instructions
 **************************************************************************************************************
 
 <item Instructionsshield>
-/ 1 = "You have the power to defend yourself: using the keyboard keys c,v,b,and n, 
-~n move the green tick mark to the part of the circle where the cannon is aimed."
-/ 2 = "Now, try moving the green tick mark AWAY from where the cannon is aimed. 
-~n Remember, you can move with the keyboard keys c,v,b,and n." 
+/ 1 = "You have the power to defend yourself: the green tick mark at the top of the screen represents the center of your shield. 
+~n Practice protecting yourself now: move the green tick mark to the part of the circle where the cannon is aimed."
+/ 2 = "Now, try try to miss the cannon's shot on purpose: use your mouse to click another part of the circle,
+~n AWAY from where the cannon is aimed." 
 </item>
 
 <text Instructions_shield>
@@ -315,12 +318,23 @@ Values which will be updated during the trials
 / experimentname = "Cannonball Task"
 / blocknum = 0
 /pacetocontinue = 1
+/ block = 0
 
 
 //values for calculating response angle
 / anglesize = 0
-/ r = 15
-/block = 0
+
+/ selected_x = 0
+/ selected_y = 0
+/ quadrant = 0
+/ oppositeSide = 0
+/ adjacentSide = 0
+/ hypotenuse = 0
+/ oppositeSideAngle_degrees = 0
+/ oppositeSideAngle_radians = 0
+/ placementAngle = 0
+/ valid = 0
+/ r = 0
 </values>
 <parameters>
 / ChoiceTime = 4000 //how long pts have to make choice
@@ -340,15 +354,91 @@ Useful expressions
 	expressions.angEnd = values.angmu + values.conc
 }
 / remainingTimeShieldChoice = parameters.ChoiceTime - trial.placeshield_keys.latency 
-/ centerx = 0.5*display.canvaswidth
-/ centery = 0.5*display.canvasheight
 / circleproportion = 0.25
 / angleup = values.r + picture.shield.currentitemnumber
 / angledown = values.r - picture.shield.currentitemnumber
-/ angoddball = rand(0,359)
+/ angoddball = randgaussian(0, 2.99)
 / centsearned = values.centsearned * values.cannonballs_caught
 / angrand = randgaussian(values.angmu, values.conc)
+/ angsurprise = rand(0, 360)
 //Expressions for calculating angles
+/ centerx = 0.5*display.canvaswidth
+/ centery = 0.5*display.canvasheight
+/ calculateSelectedPosition = {
+
+	if (values.selected_x > expressions.centerx && values.selected_y <= expressions.centery){
+		values.quadrant = 1;
+	} else if (values.selected_x >= expressions.centerx && values.selected_y > expressions.centery){
+		values.quadrant = 2;
+	} else if (values.selected_x < expressions.centerx && values.selected_y >= expressions.centery){
+		values.quadrant = 3;
+	} else if (values.selected_x <= expressions.centerx && values.selected_y < expressions.centery){
+		values.quadrant = 4;
+	} else {
+		values.quadrant = "check data";
+	};
+	
+	if (values.quadrant == 1){
+		if (values.selected_y == expressions.centery){
+			values.oppositeSideAngle_degrees = 90;
+		} else {
+			values.oppositeSide = abs(values.selected_x - expressions.centerx);
+			values.adjacentSide = abs(values.selected_y - expressions.centery);
+			values.hypotenuse = sqrt(values.oppositeSide*values.oppositeSide + values.adjacentSide*values.adjacentSide);
+			values.oppositeSideAngle_radians = asin(values.oppositeSide/values.hypotenuse);
+			values.oppositeSideAngle_degrees = deg(values.oppositeSideAngle_radians);			
+		};
+		values.placementAngle = values.oppositeSideAngle_degrees + 0;
+	} else if (values.quadrant == 2){
+		if (values.selected_x == expressions.centerx){
+			values.oppositeSideAngle_degrees = 90;
+		} else {
+			values.oppositeSide = abs(values.selected_y - expressions.centery);
+			values.adjacentSide = abs(values.selected_x - expressions.centerx);
+			values.hypotenuse = sqrt(values.oppositeSide*values.oppositeSide + values.adjacentSide*values.adjacentSide);
+			values.oppositeSideAngle_radians = asin(values.oppositeSide/values.hypotenuse);
+			values.oppositeSideAngle_degrees = deg(values.oppositeSideAngle_radians);			
+		};
+		values.placementAngle = values.oppositeSideAngle_degrees + 90;		
+	} else if (values.quadrant == 3){
+		if (values.selected_y == expressions.centery){
+			values.oppositeSideAngle_degrees = 90;
+		} else {
+			values.oppositeSide = abs(values.selected_x - expressions.centerx);
+			values.adjacentSide = abs(values.selected_y - expressions.centery);
+			values.hypotenuse = sqrt(values.oppositeSide*values.oppositeSide + values.adjacentSide*values.adjacentSide);
+			values.oppositeSideAngle_radians = asin(values.oppositeSide/values.hypotenuse);
+			values.oppositeSideAngle_degrees = deg(values.oppositeSideAngle_radians);			
+		};
+		values.placementAngle = values.oppositeSideAngle_degrees + 180;		
+	} else if (values.quadrant == 4){
+		if (values.selected_x == expressions.centerx){
+			values.oppositeSideAngle_degrees = 90;
+		} else {
+			values.oppositeSide = abs(values.selected_y - expressions.centery);
+			values.adjacentSide = abs(values.selected_x - expressions.centerx);
+			values.hypotenuse = sqrt(values.oppositeSide*values.oppositeSide + values.adjacentSide*values.adjacentSide);
+			values.oppositeSideAngle_radians = asin(values.oppositeSide/values.hypotenuse);
+			values.oppositeSideAngle_degrees = deg(values.oppositeSideAngle_radians);			
+		};
+		values.placementAngle = values.oppositeSideAngle_degrees + 270;		
+	} else {
+		values.placementAngle = 360;
+	};
+}
+
+
+/ checkResponseCoordinates = {
+	if (  ((values.selected_x - expressions.centerx)*(values.selected_x - expressions.centerx)
+	+ (values.selected_y - expressions.centery)*(values.selected_y - expressions.centery)) 
+	> ((parameters.circleproportion - 0.025) * display.canvasheight) * ((parameters.circleproportion - 0.025) * display.canvasheight)){
+		values.valid = 1;
+	} else {
+		values.valid = 0;
+	};
+	
+}
+
 </expressions>
 **************************************************************************************************************
 Output data file columns
@@ -379,7 +469,7 @@ Instructions Trials
 </text>
 
 <trial Instructions_BeginTask>
-/ stimulusframes = [1 = wall, shield_center_keys, Instructions_cannon, cannon, Spacetocontinue]
+/ stimulusframes = [1 = shield_center, Instructions_cannon, cannon, Spacetocontinue]
 / validresponse = (57)
 / beginresponsetime = 500
 / ontrialbegin = [
@@ -403,55 +493,47 @@ Instructions Trials
 
 
 <trial Instructions_PlaceShield_delay>
-/ stimulusframes = [1 = cannon, shield_center_keys, keyboard_diagram_reference, Lockin, Instructions_shield]
+/ stimulusframes = [1 = cannon, shield_center, keyboard_diagram_reference, Lockin, Instructions_shield]
 / trialduration = 500
 </trial>
 
 
 <trial Instructions_PlaceShield>
-/ stimulusframes = [1 = cannon, shield_center_keys, keyboard_diagram_reference, Lockin, Instructions_shield]
-/ validresponse = (46, 47, 48, 49, 57)
-/ correctresponse = (57)
+/ stimulusframes = [1 = responsearea, cannon, shield_center, Lockin, Instructions_shield]
+/ inputdevice = mouse
+/ validresponse = (responsearea)
+/ correctresponse = (responsearea)
 / ontrialbegin = [
-	picture.keyboard_diagram_reference.vposition = 85
+	picture.keyboard_diagram_reference.vposition = 85;
 ]
-/ ontrialend = [
-    if (trial.Instructions_PlaceShield.response == 47) {
-        values.r -= parameters.step_deg;
-    } else if (trial.Instructions_PlaceShield.response == 48){
-        values.r += parameters.step_deg;
-    } else if (trial.Instructions_PlaceShield.response == 46) {
-        values.r -= parameters.step_deg_lg;
-    } else if (trial.Instructions_PlaceShield.response == 49){
-        values.r += parameters.step_deg_lg;
-    } else if (trial.Instructions_PlaceShield.response == 57){
-		list.previousshield.appenditem(values.r);
-		};
-	
+/ontrialend = [
+    values.selected_x = 1px*trial.placeshield_mouse.responsex;
+	values.selected_y = 1px*trial.placeshield_mouse.responsey;
+	expressions.calculateSelectedPosition;
+	values.r  = values.placementAngle;
+	list.previousshield.appenditem(values.r);
 	if (floor(values.r/360 >= 1)){
 		values.r = values.r-360
 	} else if (floor(values.r/360 < 0)){
 		values.r = values.r+ 360
 		};
 	]
+
 / branch = [
-     if (trial.Instructions_PlaceShield.response == 47) {
-        trial.Instructions_PlaceShield;
-    } else if (trial.Instructions_PlaceShield.response == 48){
-        trial.Instructions_PlaceShield;
-	} else if (trial.Instructions_PlaceShield.response == 46) {
-        trial.Instructions_PlaceShield;
-    } else if (trial.Instructions_PlaceShield.response == 49){
-        trial.Instructions_PlaceShield;
-    } else if (trial.Instructions_PlaceShield.response == 57){
-		trial.Instructions_CannonOutcome;
-	  };
-	]
+	if(trial.placeshield_mouse.response == "responsearea") {
+		picture.shield_center.rotation = values.Placementangle;
+        return trial.showPE;
+	}
+	else if (trial.placeshield_mouse.response != "responsearea") {
+		return trial.placeshield_mouse;
+	}
+]
+
 </trial>
 
 
 <trial Instructions_CannonOutcome>
-/ stimulusframes = [1 = cannon, shield_center_keys, cannonball, keyboard_diagram_reference]
+/ stimulusframes = [1 = cannon, shield_center, cannonball]
 / correctresponse = (57)
 / trialduration = 2000
 / beginresponsetime = 1000
@@ -601,10 +683,8 @@ Instructions Trials
 </trial>
 
 <text Reminder>
-/ items = ("Remember, you can defend yourself using the keyboard keys c,v,b,and n.
-~n c and n will allow you to make bigger movements.
-~n v and b will allow you to make smaller adjustments.
-~n pressing space will lock in your position. ") 
+/ items = ("Remember, you can defend yourself by placing your shiled in the path of the cannon
+~n try your best to place your shield at the center of the cannon's aim") 
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / position = (50%, 30%)
 / size = (80%, 50%)
@@ -614,14 +694,8 @@ Instructions Trials
 
 
 <trial Reminder>
-/ stimulusframes = [1 = Reminder, keyboard_diagram_reference, Spacetocontinue]
+/ stimulusframes = [1 = Reminder, Spacetocontinue]
 / correctresponse = (57)
-/ ontrialbegin = [
-	picture.keyboard_diagram_reference.vposition = 60
-]
-/ ontrialend = [
-	picture.keyboard_diagram_reference.vposition = 80
-]
 / branch = [
 	trial.mainloop
 ]
@@ -656,7 +730,7 @@ Experimental Block instructions
 / ontrialbegin = [
 	values.totalearnings = values.totalearnings + expressions.centsearned;
 	values.block = list.Condition.nextvalue;
-	values.angmu = expressions.angoddball;
+	values.angmu = values.angmu + expressions.angoddball;
 	values.practiceblock = 4;
 	values.ang = expressions.angrand; 
 	if (values.block == 2) {
@@ -703,7 +777,7 @@ Experimental Block instructions
 	values.totalearnings = values.totalearnings + expressions.centsearned;
 	values.cannonballs_caught = 0;
 	values.cannonballs_missed = 0;
-	values.angmu = expressions.angoddball;
+	values.angmu = expressions.angsurprise;
 	
 ]
 </trial>
@@ -795,14 +869,13 @@ Experimental Block instructions
 **************************************************************************************************************
 Core Task Trials
 **************************************************************************************************************	  
-//swictch oddball for changepoint
+//switch oddball for changepoint
 
 <trial mainloop>
-/ stimulusframes = [1 = Inst1, wall]
+/ stimulusframes = [1 = Inst1, shield_center]
 / trialduration = 100
 / recorddata = true   
 / ontrialbegin = [ 
-values.r = rand(0, 359);
 if (values.practiceblock == 1) {
 	values.StaySwitch = 0;
 	values.ang = 0; 
@@ -824,21 +897,24 @@ if (values.practiceblock == 1) {
    if (values.StaySwitch == 1){
 	   if (values.block == 1) {
 			picture.cannon.rotation = expressions.angrand;
-			values.ang = expressions.angoddball;		
+			values.ang = values.angsurprise;		
 		} else if (values.block == 2) {
-			values.angmu = expressions.angoddball;
+			values.angmu = expressions.angsurprise;
 			values.ang = expressions.angrand;
 			} 	
-   } else if (values.StaySwitch == 0) {
-		values.ang = expressions.angrand;
-		values.rand = values.ang + rand(-15, 15);
+   } else if (values.StaySwitch == 0) { 
+		if (values.block == 1){
+			values.angmu = values.angmu + expressions.angoddball;
+		} else if (values.block == 2) {
+			values.ang = expressions.angrand;
+		}
 		}
 } else if (values.practiceblock == 5) {
 	values.cannon = 2;
 	values.StaySwitch = list.StayorSwitch.nextvalue;
     if (values.StaySwitch == 1){
 		if (values.block == 1) {
-			values.ang = expressions.angoddball;
+			values.ang = values.angmu + expressions.angoddball;	
 		} else if (values.block == 2) {
 			values.angmu = expressions.angoddball;
 		} 
@@ -861,12 +937,49 @@ if (values.practiceblock == 1) {
 };
 ]
 / branch = [
-	trial.placeshield_keys;	
+	trial.placeshield_mouse;	
 ]
 </trial>
 
+
+<trial placeshield_mouse>
+/ stimulusframes = [1 = responsearea, shield_center, cannon, Inst1, keyboard_diagram_reference]
+/ inputdevice = mouse
+/ validresponse = (responsearea)
+/ correctresponse = (responsearea)
+/ ontrialbegin = [
+	if (values.practiceblock == 5 || values.practiceblock == 0) {
+		values.cannon = 2;
+	} else if (values.practiceblock == 4) {
+		values.cannon = 1;
+	} else {
+		values.cannon = 1;
+	};
+	picture.keyboard_diagram_reference.vposition = 85;
+]
+
+/ontrialend = [
+    values.selected_x = 1px*trial.placeshield_mouse.responsex;
+	values.selected_y = 1px*trial.placeshield_mouse.responsey;
+	expressions.calculateSelectedPosition;
+	values.r = values.placementAngle + 1;
+	list.previousshield.appenditem(values.r);
+	]
+/ branch = [
+	if(trial.placeshield_mouse.response == "responsearea") {
+		picture.shield_center.rotation = values.Placementangle;
+        return trial.showPE;
+	}
+	else{
+		return trial.placeshield_mouse;
+	}
+]
+
+</trial>
+
+
 <trial placeshield_keys>
-/ stimulusframes = [1 = wall, shield_center_keys, cannon, Inst1, keyboard_diagram_reference]
+/ stimulusframes = [1 = shield_center, cannon, Inst1, keyboard_diagram_reference]
 / validresponse = (46, 47, 48, 49, 57)
 / correctresponse = (57)
 / ontrialbegin = [
@@ -879,35 +992,17 @@ if (values.practiceblock == 1) {
 	};
 	picture.keyboard_diagram_reference.vposition = 85;
 ]
-/ ontrialend = [
-    if (trial.placeshield_keys.response == 47) {
-        values.r -= parameters.step_deg;
-    } else if (trial.placeshield_keys.response == 48){
-        values.r += parameters.step_deg;
-    }
-	else if (trial.placeshield_keys.response == 46) {
-        values.r -= parameters.step_deg_lg;
-    } else if (trial.placeshield_keys.response == 49){
-        values.r += parameters.step_deg_lg;
-	} else if (trial.placeshield_keys.response == 57){
-		list.previousshield.appenditem(values.r);
-	}
+/ontrialend = [
+    values.selected_x = 1px*trial.placeshield_mouse.responsex;
+	values.selected_y = 1px*trial.placeshield_mouse.responsey;
+	expressions.calculateSelectedPosition;
+]
+/ branch = [
+	if(trial.placeshield_mouse.response == "responsearea") {
+        picture.shield_center.rotation = values.Placementangle;
+        trial.showPE;}
 ]
 
-	
-/ branch = [
-     if (trial.placeshield_keys.response == 47) {
-        trial.placeshield_keys;
-    } else if (trial.placeshield_keys.response == 48){
-        trial.placeshield_keys;
-	} else if (trial.placeshield_keys.response == 46) {
-        trial.placeshield_keys;
-    } else if (trial.placeshield_keys.response == 49){
-        trial.placeshield_keys;
-    } else if (trial.placeshield_keys.response == 57){
-        trial.showPE;
-	};
-]
 </trial>
 
 <text trialcounter>
@@ -919,8 +1014,8 @@ if (values.practiceblock == 1) {
 </text>
 
 <trial showPE> 
-/ stimulusframes = [1 = wall, Inst1, shield_center_keys, cannonball, cannon, trialcounter]
-/ trialduration = 2000
+/ stimulusframes = [1 = Inst1, shield_center, cannonball, cannon, trialcounter]
+/ trialduration = 1500
 / recorddata = false
 / ontrialbegin = [
 	if (values.practiceblock == 5 || values.practiceblock == 0) {
@@ -937,13 +1032,13 @@ if (values.practiceblock == 1) {
 	 };
 ]
 / branch = [
-	trial.revealshield
+	return trial.revealshield
 ]
 
 </trial>
 
 <trial revealshield>
-/ stimulusframes = [1 = wall, shield, cannon, cannonball]
+/ stimulusframes = [1 = shield, cannon, cannonball]
 / validresponse = (57)
 / correctresponse = (57)
 / beginresponsetime = 500
@@ -1162,8 +1257,8 @@ Experiment Sequence
 
 ]
 / trials = [
-1-60 = mainloop;
-61 = Howyoudid;
+1-6 = mainloop;
+7 = Howyoudid;
 ]
 </block> 
 1 = InstructionBlock;
