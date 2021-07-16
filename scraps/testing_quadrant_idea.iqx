@@ -1,5 +1,5 @@
 ﻿<picture shield_center>
-/ items = ("Stimuli/Shield_arc.svg")
+/ items = ("Shield_arc.svg")
 / size = (15%, 5%))
 / position = (-10%, -10%)
 / rotation = 0
@@ -39,7 +39,7 @@
 
 
 <trial showchoice> 
-/ stimulusframes = [1 = angle, responsearea, shield_center]
+/ stimulusframes = [1 = angle,, Notresponsearea, shield_center]
 / trialduration = 1000
 / recorddata = false
 </trial>
@@ -52,7 +52,7 @@
 </text>
 
 <trial printangle> 
-/ stimulusframes = [1 = angle, responsearea, shield_center]
+/ stimulusframes = [1 = angle, shield_center]
 / validresponse = (" ")
 / recorddata = false
 / trialduration = 2000
