@@ -1,0 +1,2 @@
+date	time	group	subject	session	build	blocknum	trialnum	blockcode	trialcode	pretrialpause	posttrialpause	trialduration	trialtimeout	response	correct	latency	stimulusnumber1	stimulusitem1	stimulusonset1	stimulusnumber2	stimulusitem2	stimulusonset2	stimulusnumber3	stimulusitem3	stimulusonset3
+2021-07-15	14:07:42	1	1	1	6.4.2	1	1	experiment	responsearea	0	0	0	0	responsearea	1	992	1		27	0	0	0	0	0	0

@@ -1,27 +1,27 @@
 ﻿<picture shield_center>
+<<<<<<< HEAD
 / items = ("Shield_arc.svg")
 / size = (15%, 5%))
 / position = (-10%, -10%)
 / rotation = 0
+=======
+/ items = ("Arc4-removebg-preview.png")
+/ size = (500px, 500px))
+/ position = (50%, 50%)
+/ rotation = values.Placementangle
+>>>>>>> 6cc8dd190f400ff6cedc23cf4b7f9cc6808aef78
 </picture>
 
 
 <shape responsearea>
 / shape = circle
-/ size = (500px, 500px)
-/ position = (50%, 50%)
-</shape>
-
-<shape Notresponsearea>
-/ shape = circle
-/ color = aqua
-/ size = (470px, 470px)
+/ size = (435px, 435px)
 / position = (50%, 50%)
 </shape>
 
 <trial responsearea>
-/ stimulusframes = [1 = responsearea, Notresponsearea]
-/ validresponse = (responsearea,Notresponsearea)
+/ stimulusframes = [1 = responsearea]
+/ validresponse = (responsearea)
 / correctresponse = (responsearea)
 / inputdevice = mouse
 /ontrialend = [
@@ -31,8 +31,7 @@
 ]
 / branch = [
     if(trial.responsearea.response == "responsearea") {
-        picture.shield_center.hposition = values.selected_x;
-         picture.shield_center.vposition = values.selected_y;
+        picture.shield_center.rotation = values.r;
         trial.showchoice;}
 ]
 </trial>
@@ -73,6 +72,7 @@
 / oppositeSideAngle_radians = 0
 / placementAngle = 0
 / valid = 0
+/ r = 0
 </values>
 
 <parameters>
