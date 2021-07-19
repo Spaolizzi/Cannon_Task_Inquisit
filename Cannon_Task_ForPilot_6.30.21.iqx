@@ -50,7 +50,7 @@ Creating image stimuli
 / items = ArcPicture
 / size  = (500px, 500px)
 / position = (50%,50%)
-/ rotation = (values.r)
+/ rotation = (values.placementAngle)
 </picture>
 
 
@@ -105,7 +105,7 @@ Creating image stimuli
 / items = Cannon
 / size = (300px, 300px)
 / position = (50%, 50%)
-/ rotation = values.rand
+/ rotation = values.angmu
 / select = values.cannon
 </picture>
 
@@ -113,7 +113,7 @@ Creating image stimuli
 / items  = ("cannonball.png")
 / size = (750px, 750px)
 / position = (50%, 50%)
-/ rotation = values.ang
+/ rotation = values.angrand
 </picture>
 
 **************************************************************************************************************
@@ -121,8 +121,7 @@ Creating Text stimuli for instructions
 **************************************************************************************************************
 
 <item Instructionsshield>
-/ 1 = "You have the power to defend yourself: the green tick mark at the top of the screen represents the center of your shield. 
-~n Practice protecting yourself now: move the green tick mark to the part of the circle where the cannon is aimed."
+/ 1 = "You have the power to defend yourself: the green tick mark at the top of the screen represents the center of your shield."
 / 2 = "Now, try try to miss the cannon's shot on purpose: use your mouse to click another part of the circle,
 ~n AWAY from where the cannon is aimed." 
 </item>
@@ -242,7 +241,7 @@ Creating Text stimuli for instructions
 </text>
 
 <text Inst1>
-/ items = ("Use the keys to place your shield and block the cannonball")
+/ items = ("Practice protecting yourself now. Move the green tick mark to the part of the circle where the cannon is aimed.")
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / position = (50%, 20%)
 / size = (80%, 5%)
@@ -251,8 +250,8 @@ Creating Text stimuli for instructions
 <text ValueTracker>
 / items = ("angmu = <%values.angmu%>
 ~n angrand = <%expressions.angrand%>
-~n ang = <%values.ang%>
-~n totalearnings = <%values.totalearnings%>")
+~n practiceblock = <%values.practiceblock%>
+~n cannonball rotation = <%picture.cannonball.rotation%>")
 / fontstyle = ("Arial", 2%, true, false, false, false, 5, 1)
 / position = (80%, 80%)
 / size = (15%, 5%)
@@ -319,6 +318,7 @@ Values which will be updated during the trials
 / blocknum = 0
 /pacetocontinue = 1
 / block = 0
+/angrand = 0
 
 
 //values for calculating response angle
@@ -334,7 +334,6 @@ Values which will be updated during the trials
 / oppositeSideAngle_radians = 0
 / placementAngle = 0
 / valid = 0
-/ r = 0
 </values>
 <parameters>
 / ChoiceTime = 4000 //how long pts have to make choice
@@ -353,10 +352,9 @@ Useful expressions
 } else if (values.angmu <= 330) {
 	expressions.angEnd = values.angmu + values.conc
 }
-/ remainingTimeShieldChoice = parameters.ChoiceTime - trial.placeshield_keys.latency 
 / circleproportion = 0.25
-/ angleup = values.r + picture.shield.currentitemnumber
-/ angledown = values.r - picture.shield.currentitemnumber
+/ angleup = values.placementAngle+ picture.shield.currentitemnumber
+/ angledown = values.placementAngle- picture.shield.currentitemnumber
 / angoddball = randgaussian(0, 2.99)
 / centsearned = values.centsearned * values.cannonballs_caught
 / angrand = randgaussian(values.angmu, values.conc)
@@ -449,7 +447,7 @@ values.block, values.StaySwitch,
 values.conc, values.trialnum, values.outcomeindex, 
 values.practiceblock, values.cannon,
 values.ang, values.angmu,, values.cannonballs_caught, values.cannonballs_missed, 
-values.r,  
+values.placementAngle,  
 values.centsearned, values.totalearnings) // Block level variables		
 </data>
 **************************************************************************************************************
@@ -482,8 +480,7 @@ Instructions Trials
 	values.block = 0;
 	values.ang = 0;
 	values.practiceblock = 1;
-	values.r = rand(0, 359);
-	values.rand = values.ang;
+	values.placementAngle = rand(0, 359);
 	]
 / branch = [
 	return trial.Instructions_PlaceShield_delay;
@@ -504,18 +501,17 @@ Instructions Trials
 / validresponse = (responsearea)
 / correctresponse = (responsearea)
 / ontrialbegin = [
-	picture.keyboard_diagram_reference.vposition = 85;
 ]
 /ontrialend = [
     values.selected_x = 1px*trial.placeshield_mouse.responsex;
 	values.selected_y = 1px*trial.placeshield_mouse.responsey;
 	expressions.calculateSelectedPosition;
-	values.r  = values.placementAngle;
-	list.previousshield.appenditem(values.r);
-	if (floor(values.r/360 >= 1)){
-		values.r = values.r-360
-	} else if (floor(values.r/360 < 0)){
-		values.r = values.r+ 360
+	values.placementAngle  = values.placementAngle;
+	list.previousshield.appenditem(values.placementAngle);
+	if (floor(values.placementAngle/360 >= 1)){
+		values.placementAngle = values.placementAngle-360
+	} else if (floor(values.placementAngle/360 < 0)){
+		values.placementAngle = values.placementAngle+ 360
 		};
 	]
 
@@ -538,7 +534,7 @@ Instructions Trials
 / trialduration = 2000
 / beginresponsetime = 1000
 / branch = [
-	if (values.ang <= (values.r + 10) && values.ang >= (values.r - 10)) {
+	if (values.angrand <= (values.placementAngle + 1) && values.angrand >= (values.placementAngle - 1)) {
 		values.hitmiss = 1;	
 		if (values.practiceblock == 1) {
 			values.outcomeindex = 3;
@@ -548,8 +544,8 @@ Instructions Trials
 			values.instructshield = 2;
 		};
 		trial.cannon_outcome;
-	} else if (values.r + 10 >= 360){
-		if (values.ang <= (values.r + 10 - 360)) {
+	} else if (values.placementAngle + 10 >= 360){
+		if (values.angrand <= (values.placementAngle + 10 - 360)) {
 			values.hitmiss = 1;	
 			if (values.practiceblock == 1) {
 				values.outcomeindex = 3;
@@ -558,8 +554,8 @@ Instructions Trials
 			};
 			trial.cannon_outcome;
 		}
-	} else if (values.r - 10 < 0){
-		if (values.ang >= (values.r - 10 + 360)) {
+	} else if (values.placementAngle - 10 < 0){
+		if (values.ang >= (values.placementAngle - 10 + 360)) {
 			values.hitmiss = 1;	
 			if (values.practiceblock == 1) {
 				values.outcomeindex = 3;
@@ -606,11 +602,6 @@ Instructions Trials
 / correctresponse = (57)
 / ontrialend = [
 	values.practiceblock = 3;
-	list.angle_sequence_1.clearitems();
-	list.angle_sequence_1.appenditem(1);
-	list.angle_sequence_1.appenditem(1);
-	list.angle_sequence_1.appenditem(1);
-	list.angle_sequence_1.appenditem(rand(15, 350));
 ]
 </trial>
 
@@ -629,7 +620,8 @@ Instructions Trials
 / ontrialend = [
 	values.practiceblock = 5;
 	values.cannon = 2;
-	values.trialnum += 1
+	values.trialnum += 1;
+	values.angmu = expressions.angsurprise;
 	
 ]
 / branch = [
@@ -683,7 +675,7 @@ Instructions Trials
 </trial>
 
 <text Reminder>
-/ items = ("Remember, you can defend yourself by placing your shiled in the path of the cannon
+/ items = ("Remember, you can defend yourself by placing your shield in the path of the cannon
 ~n try your best to place your shield at the center of the cannon's aim") 
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / position = (50%, 30%)
@@ -730,9 +722,8 @@ Experimental Block instructions
 / ontrialbegin = [
 	values.totalearnings = values.totalearnings + expressions.centsearned;
 	values.block = list.Condition.nextvalue;
-	values.angmu = values.angmu + expressions.angoddball;
+	values.angmu = expressions.angsurprise;
 	values.practiceblock = 4;
-	values.ang = expressions.angrand; 
 	if (values.block == 2) {
 		text.block_start.currentitemnumber == 2
 	} else if (values.block == 1) {
@@ -877,64 +868,84 @@ Core Task Trials
 / recorddata = true   
 / ontrialbegin = [ 
 if (values.practiceblock == 1) {
+	// practice hit
 	values.StaySwitch = 0;
-	values.ang = 0; 
-	values.rand = values.ang;
+	values.angmu = 0; //cannon
+	values.angrand = 0; //cannonball
 } else if (values.practiceblock == 99) {
+	 // practice miss
 	values.StaySwitch = 0;
-	values.ang = 0;
-	values.rand = values.ang; 
-} else if (values.practiceblock == 2) {
+	values.angmu = 0; //cannon
+	values.angrand = 0;  //cannonball
+} else if (values.practiceblock == 2) { // practice shield size
 	values.StaySwitch = 0;
-	values.ang = 0;
-	values.rand = values.ang; 
-} else if (values.practiceblock == 3) {
-	values.ang = list.angle_sequence_1.nextvalue;
-	values.rand = values.ang; 
+	values.angmu = 0; //cannon
+	values.angrand = 0; //cannon
+} else if (values.practiceblock == 3) { // practice movement
 	values.StaySwitch = 0;
-} else if (values.practiceblock == 4) {	
+	values.angmu = rand(0, 360); //cannon
+	values.angrand = values.angmu; //cannonball
+} else if (values.practiceblock == 4){
+	// practice cannon visible
    values.StaySwitch = list.StayorSwitch.nextvalue;
    if (values.StaySwitch == 1){
-	   if (values.block == 1) {
-			picture.cannon.rotation = expressions.angrand;
-			values.ang = values.angsurprise;		
+	   //switch
+	   if (values.block == 1) { //oddball 
+			values.angrand = expressions.angsurprise; //cannonball	
+		} else if (values.block == 2) { //Changepoint
+			values.angmu = expressions.angsurprise; //cannon
+			values.angrand = expressions.angrand; //cannonball
+			}
+   } else if (values.StaySwitch == 0) {
+	   //stay
+		if (values.block == 1){ //Oddball
+			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
+			values.angrand = expressions.angrand; //cannonnball location
 		} else if (values.block == 2) {
-			values.angmu = expressions.angsurprise;
-			values.ang = expressions.angrand;
-			} 	
-   } else if (values.StaySwitch == 0) { 
-		if (values.block == 1){
-			values.angmu = values.angmu + expressions.angoddball;
-		} else if (values.block == 2) {
-			values.ang = expressions.angrand;
-		}
-		}
+			values.angrand = expressions.angrand; // cannnonball
+			}
+   }
 } else if (values.practiceblock == 5) {
+	// practice cannon not visible
 	values.cannon = 2;
 	values.StaySwitch = list.StayorSwitch.nextvalue;
-    if (values.StaySwitch == 1){
-		if (values.block == 1) {
-			values.ang = values.angmu + expressions.angoddball;	
+    if (values.StaySwitch == 1){ //switch
+		if (values.block == 1) { //oddball
+			values.angrand = expressions.angsurprise; //cannonball	
+		} else if (values.block == 2) { 
+			values.angmu = expressions.angsurprise; //cannon
+			values.angrand = expressions.angrand; //cannonball
+			} 
+		} else if (values.StaySwitch == 0) {
+		if (values.block == 1){ //Oddball
+			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
+			values.angrand = expressions.angrand; //cannonnball location
 		} else if (values.block == 2) {
-			values.angmu = expressions.angoddball;
-		} 
-   } else if (values.StaySwitch == 0) {
-		values.ang = expressions.angrand;
-		}	
+			values.angrand = expressions.angrand; // cannnonball
+			}
+		}
 } else if (values.practiceblock == 0) {
 	values.cannon = 2;
 	values.trialnum += 1;
 	values.StaySwitch = list.StayorSwitch.nextvalue;
-    if (values.StaySwitch == 1){
-		if (values.block == 2) {
-			values.angmu = expressions.angoddball;
-		} else if (values.block ==1) {
-			values.ang = expressions.angoddball;
+    if (values.StaySwitch == 1){ //switch
+		if (values.block == 1) { //oddball
+			values.angrand = expressions.angsurprise; //cannonball	
+		} else if (values.block == 2) { 
+			values.angmu = expressions.angsurprise; //cannon
+			values.angrand = expressions.angrand; //cannonball
+			} 
+		} else if (values.StaySwitch == 0) {
+		if (values.block == 1){ //Oddball
+			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
+			values.angrand = expressions.angrand; //cannonnball location
+		} else if (values.block == 2) {
+			values.angrand = expressions.angrand; // cannnonball
+			}
 		}
-   } else if (values.StaySwitch == 0) {
-	   values.ang = expressions.angrand;
-	}
-};
+	}; 
+	picture.cannon.rotation = values.angmu;
+	picture.cannonball.rotation = values.angrand;
 ]
 / branch = [
 	trial.placeshield_mouse;	
@@ -943,7 +954,7 @@ if (values.practiceblock == 1) {
 
 
 <trial placeshield_mouse>
-/ stimulusframes = [1 = responsearea, shield_center, cannon, Inst1, keyboard_diagram_reference]
+/ stimulusframes = [1 = responsearea, shield_center, cannon, Inst1, keyboard_diagram_reference, ValueTracker]
 / inputdevice = mouse
 / validresponse = (responsearea)
 / correctresponse = (responsearea)
@@ -962,8 +973,8 @@ if (values.practiceblock == 1) {
     values.selected_x = 1px*trial.placeshield_mouse.responsex;
 	values.selected_y = 1px*trial.placeshield_mouse.responsey;
 	expressions.calculateSelectedPosition;
-	values.r = values.placementAngle + 1;
-	list.previousshield.appenditem(values.r);
+	values.placementAngle = values.placementAngle + 1;
+	list.previousshield.appenditem(values.placementAngle);
 	]
 / branch = [
 	if(trial.placeshield_mouse.response == "responsearea") {
@@ -973,34 +984,6 @@ if (values.practiceblock == 1) {
 	else{
 		return trial.placeshield_mouse;
 	}
-]
-
-</trial>
-
-
-<trial placeshield_keys>
-/ stimulusframes = [1 = shield_center, cannon, Inst1, keyboard_diagram_reference]
-/ validresponse = (46, 47, 48, 49, 57)
-/ correctresponse = (57)
-/ ontrialbegin = [
-	if (values.practiceblock == 5 || values.practiceblock == 0) {
-		values.cannon = 2;
-	} else if (values.practiceblock == 4) {
-		values.cannon = 1;
-	} else {
-		values.cannon = 1;
-	};
-	picture.keyboard_diagram_reference.vposition = 85;
-]
-/ontrialend = [
-    values.selected_x = 1px*trial.placeshield_mouse.responsex;
-	values.selected_y = 1px*trial.placeshield_mouse.responsey;
-	expressions.calculateSelectedPosition;
-]
-/ branch = [
-	if(trial.placeshield_mouse.response == "responsearea") {
-        picture.shield_center.rotation = values.Placementangle;
-        trial.showPE;}
 ]
 
 </trial>
@@ -1025,10 +1008,10 @@ if (values.practiceblock == 1) {
 	};
 ]
 / ontrialend = [
-	if (floor(values.r/360 >= 1)){
-		values.r = values.r-360;
-	} else if (floor(values.r/360 <= 0)){
-		values.r = values.r+ 360; 
+	if (floor(values.placementAngle/360 >= 1)){
+		values.placementAngle = values.placementAngle-360;
+	} else if (floor(values.placementAngle/360 <= 0)){
+		values.placementAngle = values.placementAngle+ 360; 
 	 };
 ]
 / branch = [
@@ -1051,18 +1034,18 @@ if (values.practiceblock == 1) {
 	};
 ]
 / branch = [
-	if (values.ang <= (values.r + picture.shield.currentitemnumber) && values.ang >= (values.r - picture.shield.currentitemnumber)){
+	if (values.angrand <= (values.placementAngle + picture.shield.currentitemnumber) && values.angrand >= (values.placementAngle- picture.shield.currentitemnumber)){
 		values.hitmiss = 1;
 		values.outcomeindex = 5;
 		values.cannonballs_caught += 1;
-	} else if (values.r + picture.shield.currentitemnumber >= 360){
-		if (values.ang <= (values.r + picture.shield.currentitemnumber - 360)) {
+	} else if (values.placementAngle + picture.shield.currentitemnumber >= 360){
+		if (values.angrand <= (values.placementAngle + picture.shield.currentitemnumber - 360)) {
 			values.hitmiss = 1;
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
 			}
-	} else if (values.r - picture.shield.currentitemnumber < 0){
-		if (values.ang >= (values.r - picture.shield.currentitemnumber + 360)){
+	} else if (values.placementAngle - picture.shield.currentitemnumber < 0){
+		if (values.angrand >= (values.placementAngle- picture.shield.currentitemnumber + 360)){
 			values.hitmiss = 1;	
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
@@ -1104,7 +1087,7 @@ if (values.practiceblock == 1) {
 
 
 <trial cannon_outcome>
-/ stimulusframes = [1 = Outcome]
+/ stimulusframes = [1 = Outcome, ValueTracker]
 / trialduration = 500
 / recorddata = true
 / ontrialbegin = [
@@ -1146,15 +1129,6 @@ if (values.practiceblock == 1) {
 		}
 	}; 
 ]   
-
-/ ontrialend = [
-	values.StaySwitch = list.StayorSwitch.nextvalue
-	if (values.StaySwitch == 1){
-		if (values.block == 2) {
-			values.ang = expressions.angrand;
-		}
-	}
-]
 
 </trial>
 
