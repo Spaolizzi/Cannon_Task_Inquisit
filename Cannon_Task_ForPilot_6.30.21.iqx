@@ -220,7 +220,6 @@ Creating Text stimuli for instructions
 
 <item spacetocontinue>
 /1= "Press SPACE to continue"
-/2 = ""
 </item>
 
 <text Spacetocontinue>
@@ -231,27 +230,30 @@ Creating Text stimuli for instructions
 / halign = center
 </text>
 
+<item lockin>
+/1 = "Practice protecting yourself now. Place the green tick mark on the part of the circle where the cannon is aimed.
+~n Your mouse click will lock in your shield position"
+/99 = "Now see what happens when you miss the ball. Move the green tick mark AWAY from the part of the circle where the cannon is aimed.
+~n Your mouse click will lock in your shield position"
+
+</item>
 <text Lockin>
-/ items = ("press SPACE to lock in your position.")
+/ items = lockin
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 95%)
+/ position = (50%, 85%)
+/ size = (80%, 20%)
 / valign = center
 / halign = center
 / select = sequence
 </text>
 
-<text Inst1>
-/ items = ("Practice protecting yourself now. Move the green tick mark to the part of the circle where the cannon is aimed.")
-/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 20%)
-/ size = (80%, 5%)
-</text>
-
 <text ValueTracker>
 / items = ("angmu = <%values.angmu%>
-~n angrand = <%expressions.angrand%>
-~n practiceblock = <%values.practiceblock%>
-~n cannonball rotation = <%picture.cannonball.rotation%>")
+~n cannonball rotation = <%picture.cannonball.rotation%>
+~n block earnings = <%values.blockearnings%>
+~n cannonballs caught <%values.cannonballs_caught%>
+
+")
 / fontstyle = ("Arial", 2%, true, false, false, false, 5, 1)
 / position = (80%, 80%)
 / size = (15%, 5%)
@@ -319,6 +321,7 @@ Values which will be updated during the trials
 /pacetocontinue = 1
 / block = 0
 /angrand = 0
+/blockearnings = 0
 
 
 //values for calculating response angle
@@ -356,7 +359,7 @@ Useful expressions
 / angleup = values.placementAngle+ picture.shield.currentitemnumber
 / angledown = values.placementAngle- picture.shield.currentitemnumber
 / angoddball = randgaussian(0, 2.99)
-/ centsearned = values.centsearned * values.cannonballs_caught
+/ centsearned = values.cannonballs_caught*values.centsearned
 / angrand = randgaussian(values.angmu, values.conc)
 / angsurprise = rand(0, 360)
 //Expressions for calculating angles
@@ -467,7 +470,7 @@ Instructions Trials
 </text>
 
 <trial Instructions_BeginTask>
-/ stimulusframes = [1 = shield_center, Instructions_cannon, cannon, Spacetocontinue]
+/ stimulusframes = [1 = shield_center, Instructions_cannon, cannon, Spacetocontinue, ValueTracker]
 / validresponse = (57)
 / beginresponsetime = 500
 / ontrialbegin = [
@@ -480,7 +483,6 @@ Instructions Trials
 	values.block = 0;
 	values.ang = 0;
 	values.practiceblock = 1;
-	values.placementAngle = rand(0, 359);
 	]
 / branch = [
 	return trial.Instructions_PlaceShield_delay;
@@ -490,39 +492,28 @@ Instructions Trials
 
 
 <trial Instructions_PlaceShield_delay>
-/ stimulusframes = [1 = cannon, shield_center, keyboard_diagram_reference, Lockin, Instructions_shield]
+/ stimulusframes = [1 = cannon, shield_center, Instructions_shield, ValueTracker]
 / trialduration = 500
 </trial>
 
-
 <trial Instructions_PlaceShield>
-/ stimulusframes = [1 = responsearea, cannon, shield_center, Lockin, Instructions_shield]
+/ stimulusframes = [1 = responsearea, cannon, shield_center, Lockin, Instructions_shield, ValueTracker]
 / inputdevice = mouse
-/ validresponse = (responsearea)
 / correctresponse = (responsearea)
-/ ontrialbegin = [
-]
 /ontrialend = [
-    values.selected_x = 1px*trial.placeshield_mouse.responsex;
-	values.selected_y = 1px*trial.placeshield_mouse.responsey;
+    values.selected_x = 1px*trial.Instructions_PlaceShield.responsex;
+	values.selected_y = 1px*trial.Instructions_PlaceShield.responsey;
 	expressions.calculateSelectedPosition;
-	values.placementAngle  = values.placementAngle;
 	list.previousshield.appenditem(values.placementAngle);
-	if (floor(values.placementAngle/360 >= 1)){
-		values.placementAngle = values.placementAngle-360
-	} else if (floor(values.placementAngle/360 < 0)){
-		values.placementAngle = values.placementAngle+ 360
-		};
 	]
 
 / branch = [
-	if(trial.placeshield_mouse.response == "responsearea") {
-		picture.shield_center.rotation = values.Placementangle;
-        return trial.showPE;
-	}
-	else if (trial.placeshield_mouse.response != "responsearea") {
-		return trial.placeshield_mouse;
-	}
+	if(trial.Instructions_PlaceShield.response == "responsearea") {
+		picture.shield_center.rotation = values.placementAngle;
+        return trial.Instructions_CannonOutcome;
+	} else if (trial.Instructions_PlaceShield.response == "responsearea") {
+		return trial.Instructions_PlaceShield;
+		}
 ]
 
 </trial>
@@ -609,7 +600,7 @@ Instructions Trials
 / stimulusframes = [1 = PracticeBlock_CannonNotAccurate, Spacetocontinue]
 / correctresponse = (57)
 / ontrialend = [
-	values.practiceblock = 4;
+	values.practiceblock = 3;
 	values.block = 2;
 ]
 </trial>
@@ -636,7 +627,7 @@ Instructions Trials
 </trial>
 
 <item EndPractice>
-/1 = "You have completed the practice block and earned <%expressions.centsearned%>!
+/1 = "You have completed the practice block and earned <%values.blockearnings%>!
 ~n now that you understand the game, you will play a few more rounds to earn more money."
 /2 = "In each round, the cannon will change how it fires. 
 ~n You'll get a few practice trials at the beginning of each round to learn about this."
@@ -661,13 +652,13 @@ Instructions Trials
 / stimulusframes = [1 = EndPractice, Spacetocontinue]
 / correctresponse = (57)
 / ontrialbegin = [
-	values.totalearnings = expressions.centsearned + values.totalearnings;
+	values.blockearnings = values.cannonballs_caught*values.centsearned;
+	values.totalearnings = values.blockearnings + values.totalearnings;
 ]
 / ontrialend = [
 	values.practiceblock = 4;
 	values.block = 2;
 	values.trialnum = 0;
-	values.cannonballs_caught = 0;
 	values.cannonballs_caught = 0;
 	values.cannonballs_missed = 0;
 	
@@ -675,10 +666,10 @@ Instructions Trials
 </trial>
 
 <text Reminder>
-/ items = ("Remember, you can defend yourself by placing your shield in the path of the cannon
-~n try your best to place your shield at the center of the cannon's aim") 
+/ items = ("Remember, you can defend yourself by placing your shield in the path of the cannon.
+~n Try your best to place your shield at the center of the cannon's aim") 
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 30%)
+/ position = (50%, 50%)
 / size = (80%, 50%)
 / hjustify = center
 / vjustify = center
@@ -720,9 +711,11 @@ Experimental Block instructions
 / correctresponse = (57)
 / recorddata = false
 / ontrialbegin = [
-	values.totalearnings = values.totalearnings + expressions.centsearned;
+	values.blockearnings = values.cannonballs_caught*values.centsearned;
+	values.totalearnings = values.totalearnings + values.blockearnings;
 	values.block = list.Condition.nextvalue;
 	values.angmu = expressions.angsurprise;
+
 	values.practiceblock = 4;
 	if (values.block == 2) {
 		text.block_start.currentitemnumber == 2
@@ -738,10 +731,12 @@ Experimental Block instructions
 
 
 <item start_task>
-/ 1 = "You've successfully completed training and are ready to start. 
+/ 1 = "You've successfully completed training and are ready to start.
+~n you earned <%values.blockearnings%> cents in this training round.
 ~n Now the ODDBALL ROUND will begin. 
 ~n Good Luck!" 
 / 2 = "You've successfully completed training and are ready to start. 
+~n you earned <%values.blockearnings%> cents in this training round.
 ~n Now the CHANGE POINT ROUND will begin.
 ~n Good Luck!" 
 </item>
@@ -763,13 +758,15 @@ Experimental Block instructions
 / stimulusframes = [1 = start_task, Spacetocontinue]
 / correctresponse = (57)
 / recorddata = false
+/ ontrialbegin = [
+	values.blockearnings = values.cannonballs_caught*values.centsearned;
+]
 / ontrialend = [
 	values.practiceblock = 0;
-	values.totalearnings = values.totalearnings + expressions.centsearned;
+	values.totalearnings = values.totalearnings + values.blockearnings;
 	values.cannonballs_caught = 0;
 	values.cannonballs_missed = 0;
 	values.angmu = expressions.angsurprise;
-	
 ]
 </trial>
 
@@ -831,6 +828,8 @@ Experimental Block instructions
  ~n but still have to infer its aim in order to catch balls and earn money.
  ~n
 ~n press SPACE to start the practice round"
+
+
 </item>
 
 <text youwillnotsee>
@@ -863,7 +862,7 @@ Core Task Trials
 //switch oddball for changepoint
 
 <trial mainloop>
-/ stimulusframes = [1 = Inst1, shield_center]
+/ stimulusframes = [1 = shield_center]
 / trialduration = 100
 / recorddata = true   
 / ontrialbegin = [ 
@@ -883,7 +882,7 @@ if (values.practiceblock == 1) {
 	values.angrand = 0; //cannon
 } else if (values.practiceblock == 3) { // practice movement
 	values.StaySwitch = 0;
-	values.angmu = rand(0, 360); //cannon
+	values.angmu = expressions.angsurprise; //cannon
 	values.angrand = values.angmu; //cannonball
 } else if (values.practiceblock == 4){
 	// practice cannon visible
@@ -954,7 +953,7 @@ if (values.practiceblock == 1) {
 
 
 <trial placeshield_mouse>
-/ stimulusframes = [1 = responsearea, shield_center, cannon, Inst1, keyboard_diagram_reference, ValueTracker]
+/ stimulusframes = [1 = responsearea, shield_center, cannon, ValueTracker]
 / inputdevice = mouse
 / validresponse = (responsearea)
 / correctresponse = (responsearea)
@@ -966,19 +965,18 @@ if (values.practiceblock == 1) {
 	} else {
 		values.cannon = 1;
 	};
-	picture.keyboard_diagram_reference.vposition = 85;
 ]
 
 /ontrialend = [
     values.selected_x = 1px*trial.placeshield_mouse.responsex;
 	values.selected_y = 1px*trial.placeshield_mouse.responsey;
 	expressions.calculateSelectedPosition;
-	values.placementAngle = values.placementAngle + 1;
+	values.placementAngle = values.placementAngle;
 	list.previousshield.appenditem(values.placementAngle);
 	]
 / branch = [
 	if(trial.placeshield_mouse.response == "responsearea") {
-		picture.shield_center.rotation = values.Placementangle;
+		picture.shield_center.rotation = values.placementAngle;
         return trial.showPE;
 	}
 	else{
@@ -997,7 +995,7 @@ if (values.practiceblock == 1) {
 </text>
 
 <trial showPE> 
-/ stimulusframes = [1 = Inst1, shield_center, cannonball, cannon, trialcounter]
+/ stimulusframes = [1 = shield_center, cannonball, cannon, trialcounter, ValueTracker]
 / trialduration = 1500
 / recorddata = false
 / ontrialbegin = [
@@ -1015,7 +1013,7 @@ if (values.practiceblock == 1) {
 	 };
 ]
 / branch = [
-	return trial.revealshield
+		return trial.revealshield
 ]
 
 </trial>
@@ -1066,9 +1064,10 @@ if (values.practiceblock == 1) {
 <item outcome_responses>
  /1 = "You caught the cannonball. Try to miss it!"
  /2 = "You missed the cannonball. Try to catch it!"
- /3 = "After the cannon is shot you will see the shield. In this case you caught the ball. 
- ~n More than half of the ball must overlap with the shield to make a 'catch'"
- /4 = "Good work. In this case, you missed the ball."
+ /3 = " Good work, In this case you caught the ball."
+ /4 = "Good work. In this case, you missed the ball.
+ ~n You will now see the full size of your shield after the cannon is shot.
+ ~n More than half of the ball must overlap with the shield to make a 'catch' "
  /5 = "Ball Caught"
  /6 = "Ball Missed"
 </item>
@@ -1094,11 +1093,11 @@ if (values.practiceblock == 1) {
 	if (values.outcomeindex == 2) {
 		trial.cannon_outcome.trialduration = 1500;	
 	} else if (values.outcomeindex == 4) {
-		 trial.cannon_outcome.trialduration = 2000;	
+		 trial.cannon_outcome.trialduration = 4000;	
 	} else if (values.outcomeindex == 1) {
 		trial.cannon_outcome.trialduration = 1500;	
 	} else if (values.outcomeindex == 3) {
-		trial.cannon_outcome.trialduration = 4000;	
+		trial.cannon_outcome.trialduration = 1000;	
 	} else if (values.outcomeindex == 6) {
 		trial.cannon_outcome.trialduration = 500;				
 	} else if (values.outcomeindex == 5) {
@@ -1137,7 +1136,7 @@ if (values.practiceblock == 1) {
 Reset Blocks
 ********************************************************************************************
 <item Howyoudid>
-/1 = "  In this block you caught <%values.cannonballs_caught%> of the cannonballs and earned <%expressions.centsearned%>."
+/1 = " In this block you caught <%values.cannonballs_caught%> of the cannonballs and earned <%values.blockearnings%>!"
 </item>
 
 <text Howyoudid>
@@ -1150,13 +1149,15 @@ Reset Blocks
 / select = sequence
 </text>
 
-
 <trial Howyoudid>
 / stimulusframes = [1 = Howyoudid, Spacetocontinue]
 / correctresponse = (57)
+/ ontrialbegin = [
+	values.blockearnings = values.cannonballs_caught*values.centsearned;
+	values.totalearnings = values.totalearnings + values.blockearnings;
+]
 / ontrialend = [
-	values.totalearnings = values.totalearnings + expressions.centsearned;
-	values.angmu = expressions.angoddball;
+	values.angmu = expressions.angsurprise;
 	values.ang = expressions.angrand;
 	values.cannonballs_caught = 0;
 	values.cannonballs_missed = 0;
@@ -1164,8 +1165,8 @@ Reset Blocks
 </trial>
 
 <item EndPracticePhase>
-/1 = "You have completed the round and earned <%values.totalearnings%>!"
-/2 = "You have completed the round and earned <%values.totalearnings%>!"
+/1 = "You have completed the round and earned <%values.blockearnings%>!"
+/2 = "You have completed the round and earned <%values.blockearnings%>!"
 </item>
 
 <text EndPracticePhase>
@@ -1185,6 +1186,8 @@ Reset Blocks
 	if (values.practiceblock == 4) {
 		values.practiceblock = 5;
 	}
+	values.blockearnings = values.cannonballs_caught*values.centsearned;
+	values.totalearnings = values.totalearnings + values.blockearnings;
 ]
 / branch = [
 	if (values.practiceblock == 5) {
@@ -1195,6 +1198,23 @@ Reset Blocks
 ]
 </trial>
 
+
+<text TotalEarnings>
+/ items = ("You have now completed the CANNONBALL TASK. 
+~n In total, you earned <%values.totalearnings%> for your performance!
+~n press space to continue with the study")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 50%)
+/ hjustify = center
+/ vjustify = center
+</text>
+
+<trial Total_Earnings>
+/ stimulusfrssmes = [1 = TotalEarnings, Spacetocontinue]
+/ correctresponse = (57)
+/ trialduration = 3000
+</trial>
 
 
 **************************************************************************************************************
@@ -1231,10 +1251,16 @@ Experiment Sequence
 
 ]
 / trials = [
-1-6 = mainloop;
-7 = Howyoudid;
+1-60 = mainloop;
+61 = Howyoudid;
 ]
 </block> 
+
+<block Experiment_end>
+/ trials = [
+1 = Total_Earnings;
+]
+</block>
 1 = InstructionBlock;
 <expt>
 / blocks = [ 
@@ -1243,6 +1269,7 @@ Experiment Sequence
 3-6 = Mainblock;
 7 = begin_round;
 8-11 = Mainblock;
+12 = Experiment_end;
 ]
 
 </expt>
