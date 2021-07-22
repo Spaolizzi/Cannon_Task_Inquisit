@@ -46,13 +46,13 @@ Creating base stimuli
 **************************************************************************************************************
 Creating image stimuli 
 **************************************************************************************************************
+
 <picture shield>
 / items = ArcPicture
 / size  = (500px, 500px)
 / position = (50%,50%)
 / rotation = (values.placementAngle)
 </picture>
-
 
 <text fixation>
 / items = ("+")
@@ -280,19 +280,6 @@ Initializing lists for probabilistic selection
 / poolsize = 1
 </list>
 
-// sequence
-<list angle_sequence>
-/ items = (values.angmu-expressions.angEnd)
-/ selectionmode = random
-/ poolsize = 1000
-</list>
-
-<list angle_sequence_1>
-/ items = (values.angmu-expressions.angEnd)
-/ selectionmode = random
-/ poolsize = 1000
-</list>
-
 **************************************************************************************************************
 Values which will be updated during the trials
 **************************************************************************************************************	    
@@ -301,7 +288,6 @@ Values which will be updated during the trials
 / percentTrialsStay = 0.86
 / ang = 0 // angle of cannonball strike, updated throughout the task (0-360)
 / practiceblock = 1 // update through various phases (1-5 are practice or training conditions, 0 is )
-/ numTrialEachBlock = 30
 / hitmiss = 0
 / responseTime = ""
 / currentArcitem = 1
@@ -348,13 +334,7 @@ Values which will be updated during the trials
 Useful expressions
 **************************************************************************************************************	 
 <expressions>
-/trialtime = parameters.ChoiceTime - trial.Instructions_BeginTask.latency 
 /percentTrialsSwitch = 1-values.percentTrialsStay
-/angEnd = if (values.angmu >= 330) {
-	expressions.angEnd = values.angmu - values.conc
-} else if (values.angmu <= 330) {
-	expressions.angEnd = values.angmu + values.conc
-}
 / circleproportion = 0.25
 / angleup = values.placementAngle+ picture.shield.currentitemnumber
 / angledown = values.placementAngle- picture.shield.currentitemnumber
@@ -428,18 +408,6 @@ Useful expressions
 	};
 }
 
-
-/ checkResponseCoordinates = {
-	if (  ((values.selected_x - expressions.centerx)*(values.selected_x - expressions.centerx)
-	+ (values.selected_y - expressions.centery)*(values.selected_y - expressions.centery)) 
-	> ((parameters.circleproportion - 0.025) * display.canvasheight) * ((parameters.circleproportion - 0.025) * display.canvasheight)){
-		values.valid = 1;
-	} else {
-		values.valid = 0;
-	};
-	
-}
-
 </expressions>
 **************************************************************************************************************
 Output data file columns
@@ -448,10 +416,14 @@ Output data file columns
 / columns = (build, values.experimentName, subject, date, time, 	 // General information
 values.block, values.StaySwitch, 
 values.conc, values.trialnum, values.outcomeindex, 
-values.practiceblock, values.cannon,
-values.ang, values.angmu,, values.cannonballs_caught, values.cannonballs_missed, 
-values.placementAngle,  
-values.centsearned, values.totalearnings) // Block level variables		
+values.practiceblock, values.cannon, 
+values.ang, values.angmu,values.angrand, values.angsurprise,values.cannonballs_caught, values.cannonballs_missed, 
+values.placementAngle, expressions.calculateSelectedPosition
+values.centsearned, values.totalearnings, expressions.centsearned,
+trial.Instructions_PlaceShield.latency, trial.placeshield_mouse.latency),
+expressions.angoddball, expressions.angsurprise, expressions.angleup, expressions.angledown,
+) // Block level variables		
+
 </data>
 **************************************************************************************************************
 Instructions Trials
@@ -1211,7 +1183,7 @@ Reset Blocks
 </text>
 
 <trial Total_Earnings>
-/ stimulusfrssmes = [1 = TotalEarnings, Spacetocontinue]
+/ stimulusframes = [1 = TotalEarnings, Spacetocontinue]
 / correctresponse = (57)
 / trialduration = 3000
 </trial>
