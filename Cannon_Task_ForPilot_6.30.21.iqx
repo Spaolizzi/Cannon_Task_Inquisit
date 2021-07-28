@@ -52,6 +52,7 @@ Creating image stimuli
 / size  = (500px, 500px)
 / position = (50%,50%)
 / rotation = (values.placementAngle)
+/ erase = false
 </picture>
 
 <text fixation>
@@ -76,6 +77,7 @@ Creating image stimuli
 / rotation = values.ang
 / erase = false
 / select = values.cannon
+/ erase = false
 </picture>
 
 <picture keyboard_diagram_reference>
@@ -90,6 +92,7 @@ Creating image stimuli
 / size = (500px, 500px))
 / position = (50%, 50%)
 / rotation = values.Placementangle
+/ erase = false
 </picture>
 
 
@@ -98,6 +101,7 @@ Creating image stimuli
 / size = (435px, 435px)
 / position = (50%, 50%)
 / color = white
+/ erase = false
 </shape>
 
 
@@ -107,13 +111,15 @@ Creating image stimuli
 / position = (50%, 50%)
 / rotation = values.angmu
 / select = values.cannon
+/ erase = false
 </picture>
 
 <picture cannonball>
 / items  = ("cannonball.png")
 / size = (750px, 750px)
 / position = (50%, 50%)
-/ rotation = values.angrand
+/ rotation = values.outcome
+/ erase = false
 </picture>
 
 **************************************************************************************************************
@@ -121,9 +127,8 @@ Creating Text stimuli for instructions
 **************************************************************************************************************
 
 <item Instructionsshield>
-/ 1 = "You have the power to defend yourself: the green tick mark at the top of the screen represents the center of your shield."
-/ 2 = "Now, try try to miss the cannon's shot on purpose: use your mouse to click another part of the circle,
-~n AWAY from where the cannon is aimed." 
+/ 1 = "You have the power to catch the cannonballs: the green tick mark at the top of the screen represents the center of your shield."
+/ 2 = "" 
 </item>
 
 <text Instructions_shield>
@@ -231,7 +236,7 @@ Creating Text stimuli for instructions
 </text>
 
 <item lockin>
-/1 = "Practice protecting yourself now. Place the green tick mark on the part of the circle where the cannon is aimed.
+/1 = "Practice catching the cannonballs now. Place the green tick mark on the part of the circle where the cannon is aimed.
 ~n Your mouse click will lock in your shield position"
 /99 = "Now see what happens when you miss the ball. Move the green tick mark AWAY from the part of the circle where the cannon is aimed.
 ~n Your mouse click will lock in your shield position"
@@ -306,7 +311,7 @@ Values which will be updated during the trials
 / blocknum = 0
 /pacetocontinue = 1
 / block = 0
-/angrand = 0
+/outcome = 0
 /blockearnings = 0
 
 
@@ -340,7 +345,7 @@ Useful expressions
 / angledown = values.placementAngle- picture.shield.currentitemnumber
 / angoddball = randgaussian(0, 2.99)
 / centsearned = values.cannonballs_caught*values.centsearned
-/ angrand = randgaussian(values.angmu, values.conc)
+/ outcome = randgaussian(values.angmu, values.conc)
 / angsurprise = rand(0, 360)
 //Expressions for calculating angles
 / centerx = 0.5*display.canvaswidth
@@ -413,15 +418,41 @@ Useful expressions
 Output data file columns
 **************************************************************************************************************
 <data>
-/ columns = (build, values.experimentName, subject, date, time, 	 // General information
-values.block, values.StaySwitch, 
-values.conc, values.trialnum, values.outcomeindex, 
-values.practiceblock, values.cannon, 
-values.ang, values.angmu,values.angrand, values.angsurprise,values.cannonballs_caught, values.cannonballs_missed, 
-values.placementAngle, expressions.calculateSelectedPosition
-values.centsearned, values.totalearnings, expressions.centsearned,
-trial.Instructions_PlaceShield.latency, trial.placeshield_mouse.latency),
-expressions.angoddball, expressions.angsurprise, expressions.angleup, expressions.angledown,
+/ columns = (build, 
+values.experimentName, 
+subject, 
+date, 
+time, 
+blockcode,
+trialcode,	 // General information
+values.block, 
+values.StaySwitch, 
+values.percentTrialsStay,
+values.conc, 
+values.trialnum, 
+values.outcomeindex, 
+values.practiceblock, 
+values.cannon, 
+values.hitmiss,
+values.ang,
+values.angmu,
+values.outcome, 
+values.cannonballs_caught, 
+values.cannonballs_missed, 
+values.placementAngle, 
+values.totalearnings, 
+values.blockearnings,
+block.InstructionBlock.timestamp,
+trial.placeshield_mouse.latency,
+trial.begin_block.timestamp,
+trial.mainloop.timestamp,
+trial.placeshield_mouse.timestamp,
+trial.showPE.timestamp, 
+trial.cannon_outcome.timestamp,
+picture.shield.currentitem,
+list.previousshield.currentitem,
+expressions.angleup, 
+expressions.angledown,
 ) // Block level variables		
 
 </data>
@@ -442,7 +473,7 @@ Instructions Trials
 </text>
 
 <trial Instructions_BeginTask>
-/ stimulusframes = [1 = shield_center, Instructions_cannon, cannon, Spacetocontinue, ValueTracker]
+/ stimulusframes = [1 = shield_center, Instructions_cannon, cannon, Spacetocontinue]
 / validresponse = (57)
 / beginresponsetime = 500
 / ontrialbegin = [
@@ -464,12 +495,12 @@ Instructions Trials
 
 
 <trial Instructions_PlaceShield_delay>
-/ stimulusframes = [1 = cannon, shield_center, Instructions_shield, ValueTracker]
+/ stimulusframes = [1 = cannon, shield_center, Instructions_shield]
 / trialduration = 500
 </trial>
 
 <trial Instructions_PlaceShield>
-/ stimulusframes = [1 = responsearea, cannon, shield_center, Lockin, Instructions_shield, ValueTracker]
+/ stimulusframes = [1 = responsearea, cannon, shield_center, Lockin, Instructions_shield]
 / inputdevice = mouse
 / correctresponse = (responsearea)
 /ontrialend = [
@@ -497,7 +528,7 @@ Instructions Trials
 / trialduration = 2000
 / beginresponsetime = 1000
 / branch = [
-	if (values.angrand <= (values.placementAngle + 1) && values.angrand >= (values.placementAngle - 1)) {
+	if (values.outcome <= (values.placementAngle + 1) && values.outcome >= (values.placementAngle - 1)) {
 		values.hitmiss = 1;	
 		if (values.practiceblock == 1) {
 			values.outcomeindex = 3;
@@ -508,7 +539,7 @@ Instructions Trials
 		};
 		trial.cannon_outcome;
 	} else if (values.placementAngle + 10 >= 360){
-		if (values.angrand <= (values.placementAngle + 10 - 360)) {
+		if (values.outcome <= (values.placementAngle + 10 - 360)) {
 			values.hitmiss = 1;	
 			if (values.practiceblock == 1) {
 				values.outcomeindex = 3;
@@ -588,12 +619,7 @@ Instructions Trials
 	
 ]
 / branch = [
-	if (values.trialnum >= 2) {
-		return trial.mainloop
-	} else if (values.trialnum < 2) {
-		return trial.PracticeBlock_CannonNotVisible;
-		values.trialnum = 0;
-	}
+	return trial.mainloop;
 ]
 
 </trial>
@@ -638,8 +664,8 @@ Instructions Trials
 </trial>
 
 <text Reminder>
-/ items = ("Remember, you can defend yourself by placing your shield in the path of the cannon.
-~n Try your best to place your shield at the center of the cannon's aim") 
+/ items = ("Remember, you should try your best to place your shield at the center of the cannon's aim.
+ ~n Even if you cannot see the cannon, take your best guess where it is aiming based on the cannonballs you've seen before.") 
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / position = (50%, 50%)
 / size = (80%, 50%)
@@ -842,38 +868,38 @@ if (values.practiceblock == 1) {
 	// practice hit
 	values.StaySwitch = 0;
 	values.angmu = 0; //cannon
-	values.angrand = 0; //cannonball
+	values.outcome = 0; //cannonball
 } else if (values.practiceblock == 99) {
 	 // practice miss
 	values.StaySwitch = 0;
 	values.angmu = 0; //cannon
-	values.angrand = 0;  //cannonball
+	values.outcome = 0;  //cannonball
 } else if (values.practiceblock == 2) { // practice shield size
 	values.StaySwitch = 0;
 	values.angmu = 0; //cannon
-	values.angrand = 0; //cannon
+	values.outcome = 0; //cannon
 } else if (values.practiceblock == 3) { // practice movement
 	values.StaySwitch = 0;
 	values.angmu = expressions.angsurprise; //cannon
-	values.angrand = values.angmu; //cannonball
+	values.outcome = values.angmu; //cannonball
 } else if (values.practiceblock == 4){
 	// practice cannon visible
    values.StaySwitch = list.StayorSwitch.nextvalue;
-   if (values.StaySwitch == 1){
-	   //switch
+   if (values.StaySwitch == 1){ //switch
 	   if (values.block == 1) { //oddball 
-			values.angrand = expressions.angsurprise; //cannonball	
+			values.outcome = expressions.angsurprise; //cannonball	
 		} else if (values.block == 2) { //Changepoint
 			values.angmu = expressions.angsurprise; //cannon
-			values.angrand = expressions.angrand; //cannonball
+			values.outcome = expressions.outcome; //cannonball
+			values.outcome = expressions.outcome; //cannonball
 			}
    } else if (values.StaySwitch == 0) {
 	   //stay
 		if (values.block == 1){ //Oddball
 			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
-			values.angrand = expressions.angrand; //cannonnball location
+			values.outcome = expressions.outcome; //cannonnball location
 		} else if (values.block == 2) {
-			values.angrand = expressions.angrand; // cannnonball
+			values.outcome = expressions.outcome; // cannnonball
 			}
    }
 } else if (values.practiceblock == 5) {
@@ -882,17 +908,17 @@ if (values.practiceblock == 1) {
 	values.StaySwitch = list.StayorSwitch.nextvalue;
     if (values.StaySwitch == 1){ //switch
 		if (values.block == 1) { //oddball
-			values.angrand = expressions.angsurprise; //cannonball	
+			values.outcome = expressions.angsurprise; //cannonball	
 		} else if (values.block == 2) { 
 			values.angmu = expressions.angsurprise; //cannon
-			values.angrand = expressions.angrand; //cannonball
+			values.outcome = expressions.outcome; //cannonball
 			} 
 		} else if (values.StaySwitch == 0) {
 		if (values.block == 1){ //Oddball
 			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
-			values.angrand = expressions.angrand; //cannonnball location
+			values.outcome = expressions.outcome; //cannonnball location
 		} else if (values.block == 2) {
-			values.angrand = expressions.angrand; // cannnonball
+			values.outcome = expressions.outcome; // cannnonball
 			}
 		}
 } else if (values.practiceblock == 0) {
@@ -901,22 +927,22 @@ if (values.practiceblock == 1) {
 	values.StaySwitch = list.StayorSwitch.nextvalue;
     if (values.StaySwitch == 1){ //switch
 		if (values.block == 1) { //oddball
-			values.angrand = expressions.angsurprise; //cannonball	
+			values.outcome = expressions.angsurprise; //cannonball	
 		} else if (values.block == 2) { 
 			values.angmu = expressions.angsurprise; //cannon
-			values.angrand = expressions.angrand; //cannonball
+			values.outcome = expressions.outcome; //cannonball
 			} 
 		} else if (values.StaySwitch == 0) {
 		if (values.block == 1){ //Oddball
 			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
-			values.angrand = expressions.angrand; //cannonnball location
+			values.outcome = expressions.outcome; //cannonnball location
 		} else if (values.block == 2) {
-			values.angrand = expressions.angrand; // cannnonball
+			values.outcome = expressions.outcome; // cannnonball
 			}
 		}
 	}; 
 	picture.cannon.rotation = values.angmu;
-	picture.cannonball.rotation = values.angrand;
+	picture.cannonball.rotation = values.outcome;
 ]
 / branch = [
 	trial.placeshield_mouse;	
@@ -925,7 +951,7 @@ if (values.practiceblock == 1) {
 
 
 <trial placeshield_mouse>
-/ stimulusframes = [1 = responsearea, shield_center, cannon, ValueTracker]
+/ stimulusframes = [1 = responsearea, shield_center, cannon]
 / inputdevice = mouse
 / validresponse = (responsearea)
 / correctresponse = (responsearea)
@@ -967,7 +993,7 @@ if (values.practiceblock == 1) {
 </text>
 
 <trial showPE> 
-/ stimulusframes = [1 = shield_center, cannonball, cannon, trialcounter, ValueTracker]
+/ stimulusframes = [1 = shield_center, cannonball, cannon, trialcounter]
 / trialduration = 1500
 / recorddata = false
 / ontrialbegin = [
@@ -1004,18 +1030,18 @@ if (values.practiceblock == 1) {
 	};
 ]
 / branch = [
-	if (values.angrand <= (values.placementAngle + picture.shield.currentitemnumber) && values.angrand >= (values.placementAngle- picture.shield.currentitemnumber)){
+	if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber) && values.outcome >= (values.placementAngle- picture.shield.currentitemnumber)){
 		values.hitmiss = 1;
 		values.outcomeindex = 5;
 		values.cannonballs_caught += 1;
 	} else if (values.placementAngle + picture.shield.currentitemnumber >= 360){
-		if (values.angrand <= (values.placementAngle + picture.shield.currentitemnumber - 360)) {
+		if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber - 360)) {
 			values.hitmiss = 1;
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
 			}
 	} else if (values.placementAngle - picture.shield.currentitemnumber < 0){
-		if (values.angrand >= (values.placementAngle- picture.shield.currentitemnumber + 360)){
+		if (values.outcome >= (values.placementAngle- picture.shield.currentitemnumber + 360)){
 			values.hitmiss = 1;	
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
@@ -1054,11 +1080,12 @@ if (values.practiceblock == 1) {
 / halign = center
 / vjustify = center
 / select = values.outcomeindex
+
 </text>
 
 
 <trial cannon_outcome>
-/ stimulusframes = [1 = Outcome, ValueTracker]
+/ stimulusframes = [1 = Outcome]
 / trialduration = 500
 / recorddata = true
 / ontrialbegin = [
@@ -1071,9 +1098,11 @@ if (values.practiceblock == 1) {
 	} else if (values.outcomeindex == 3) {
 		trial.cannon_outcome.trialduration = 1000;	
 	} else if (values.outcomeindex == 6) {
-		trial.cannon_outcome.trialduration = 500;				
+		text.Outcome.textcolor = red;
+		trial.cannon_outcome.trialduration = 500;	
 	} else if (values.outcomeindex == 5) {
-		trial.cannon_outcome.trialduration = 500;			
+		text.Outcome.textcolor = green;
+		trial.cannon_outcome.trialduration = 500;		
 	};
 ]
 
@@ -1130,7 +1159,7 @@ Reset Blocks
 ]
 / ontrialend = [
 	values.angmu = expressions.angsurprise;
-	values.ang = expressions.angrand;
+	values.ang = expressions.outcome;
 	values.cannonballs_caught = 0;
 	values.cannonballs_missed = 0;
 ]
@@ -1206,6 +1235,11 @@ Experiment Sequence
 </block> 
 
 <block begin_round>
+/ onblockbegin = [
+	values.trialnum = 0;
+	values.practiceblock = 4;
+]
+
 / trials = [
 1 = begin_block;
 2-3 = mainloop;
@@ -1220,11 +1254,12 @@ Experiment Sequence
 / onblockbegin = [
 	values.blocknum += 1;
 	values.trialnum = 0;
+	values.practiceblock = 0
 
 ]
 / trials = [
-1-60 = mainloop;
-61 = Howyoudid;
+1-3 = mainloop;
+4 = Howyoudid;
 ]
 </block> 
 
