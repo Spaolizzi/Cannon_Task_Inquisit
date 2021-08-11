@@ -55,31 +55,6 @@ Creating image stimuli
 / erase = false
 </picture>
 
-<text fixation>
-/ items = ("+")
-/ fontstyle = ("Arial", 10%, true, false, false, false, 5, 1)
-/ position = (50%, 50%)
-/ size = (80%, 80%)
-/ vjustify = center
-/ valign = center
-/ halign = center
-</text>
-
-<trial fixation>
-/ stimulusframes = [1 = fixation]
-/ trialduration = 500
-</trial>
-
-<picture cannonmark>
-/ items = cannonmark
-/ size  = (500px, 500px)
-/ position = (50%,50%)
-/ rotation = values.ang
-/ erase = false
-/ select = values.cannon
-/ erase = false
-</picture>
-
 <picture keyboard_diagram_reference>
 / items = ("keyboard_demo.svg")
 / size  = (300px, 300px))
@@ -89,6 +64,13 @@ Creating image stimuli
 
 <picture shield_center>
 / items = ("Arc4-removebg-preview.png")
+/ size = (500px, 500px))
+/ position = (50%, 50%)
+/ rotation = values.Placementangle
+</picture>
+
+<picture wall>
+/ items = ("Arc0-removebg-preview.png")
 / size = (500px, 500px))
 / position = (50%, 50%)
 / rotation = values.Placementangle
@@ -107,7 +89,7 @@ Creating image stimuli
 
 <picture cannon>
 / items = Cannon
-/ size = (300px, 300px)
+/ size = (270px, 270px)
 / position = (50%, 50%)
 / rotation = values.angmu
 / select = values.cannon
@@ -116,7 +98,7 @@ Creating image stimuli
 
 <picture cannonball>
 / items  = ("cannonball.png")
-/ size = (750px, 750px)
+/ size = (470px, 470px)
 / position = (50%, 50%)
 / rotation = values.outcome
 / erase = false
@@ -127,8 +109,12 @@ Creating Text stimuli for instructions
 **************************************************************************************************************
 
 <item Instructionsshield>
-/ 1 = "You have the power to catch the cannonballs: the green tick mark at the top of the screen represents the center of your shield."
-/ 2 = "" 
+/ 1 = "You will know the cannon is ready to fire when you see the CANNON READY signal appear in the center of the screen"
+/ 2 = "The green tick mark at the top of the screen represents the center of your shield. 
+~n you can move the shield with your mouse."
+/ 3 = "Each time the cannon prepares to fire, you should click the portion of the wall where the cannon is aiming with your mouse.
+~n this will place your shield in the cannonball's path" 
+/ 4 = "You should place your shield as quickly and accurately as possible once the ''CANNON READY'' signal appears on the screen"
 </item>
 
 <text Instructions_shield>
@@ -212,23 +198,19 @@ Creating Text stimuli for instructions
 / select = sequence
 </text>
 
-
-
-<text InstructtoMiss>
-/ items = ("Now, try to place the shield so that you miss the cannonball.") 
+<text cannon_ready>
+/ items = ("CANNON READY")
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / position = (50%, 50%)
-/ size = (80%, 50%)
-/ hjustify = center
-/ vjustify = center
+/ valign = center
+/ halign = center
+/ color = red
+/ txbgcolor = white
+
 </text>
 
-<item spacetocontinue>
-/1= "Press SPACE to continue"
-</item>
-
 <text Spacetocontinue>
-/ items = spacetocontinue
+/ items = ("Press SPACE to continue")
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / position = (50%, 85%)
 / valign = center
@@ -461,8 +443,7 @@ Instructions Trials
 **************************************************************************************************************	  
 
 <text Instructions_cannon>
-/ items = ("In this task, a cannon is aimed at the circle. The green tick mark on the circle
-~n is the center of a shield that can block the cannon's shot.")
+/ items = ("In this task, a cannon is aimed at the circle. Your goal is to block the cannon's shot and keep the cannonball from getting over the wall.")
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1), 
 / position = (50%, 15%)
 / size = (90%, 15%)
@@ -495,8 +476,18 @@ Instructions Trials
 
 
 <trial Instructions_PlaceShield_delay>
-/ stimulusframes = [1 = cannon, shield_center, Instructions_shield]
-/ trialduration = 500
+/ stimulusframes = [1 = cannon, shield_center, Instructions_shield, Spacetocontinue]
+/ timeout = 15000
+/ correctresponse = (57)
+/ ontrialend = [
+	values.instructshield += 1
+]
+/ branch = [
+	if(values.instructshield <= 4) {
+		return trial.Instructions_PlaceShield_delay;
+	} 
+	
+]
 </trial>
 
 <trial Instructions_PlaceShield>
@@ -533,9 +524,6 @@ Instructions Trials
 		if (values.practiceblock == 1) {
 			values.outcomeindex = 3;
 			values.instructshield = 1
-		} else if (values.practiceblock == 99){
-			values.outcomeindex = 1;
-			values.instructshield = 2;
 		};
 		trial.cannon_outcome;
 	} else if (values.placementAngle + 10 >= 360){
@@ -543,8 +531,6 @@ Instructions Trials
 			values.hitmiss = 1;	
 			if (values.practiceblock == 1) {
 				values.outcomeindex = 3;
-			} else if (values.practiceblock == 99){
-				values.outcomeindex = 1;
 			};
 			trial.cannon_outcome;
 		}
@@ -553,8 +539,6 @@ Instructions Trials
 			values.hitmiss = 1;	
 			if (values.practiceblock == 1) {
 				values.outcomeindex = 3;
-			} else if (values.practiceblock == 99){
-				values.outcomeindex = 1;
 			};
 			trial.cannon_outcome;
 			}
@@ -562,11 +546,10 @@ Instructions Trials
 		values.hitmiss = 0;
 		if (values.practiceblock == 1){
 			values.outcomeindex = 2;
-		} else if (values.practiceblock == 99) {
-			values.outcomeindex = 4;
-			}
 		};
 		trial.cannon_outcome;
+	}
+		
 ]
 </trial>
 
@@ -579,17 +562,6 @@ Instructions Trials
 ]
 </trial>
 
-<trial InstructionsMiss>
-/ stimulusframes = [1 = InstructtoMiss, Spacetocontinue]
-/ validresponse = (57)
-/ ontrialbegin = [
-	values.practiceblock = 99;
-	values.instructshield = 2
-]
-/ branch = [
-	trial.Instructions_PlaceShield
-]
-</trial>
 
 <trial PracticeBlock_CannonMoves>
 / stimulusframes = [1 = PracticeBlock_CannonMoves, Spacetocontinue]
@@ -860,7 +832,7 @@ Core Task Trials
 //switch oddball for changepoint
 
 <trial mainloop>
-/ stimulusframes = [1 = shield_center]
+/ stimulusframes = [1 = wall]
 / trialduration = 100
 / recorddata = true   
 / ontrialbegin = [ 
@@ -869,11 +841,6 @@ if (values.practiceblock == 1) {
 	values.StaySwitch = 0;
 	values.angmu = 0; //cannon
 	values.outcome = 0; //cannonball
-} else if (values.practiceblock == 99) {
-	 // practice miss
-	values.StaySwitch = 0;
-	values.angmu = 0; //cannon
-	values.outcome = 0;  //cannonball
 } else if (values.practiceblock == 2) { // practice shield size
 	values.StaySwitch = 0;
 	values.angmu = 0; //cannon
@@ -951,7 +918,7 @@ if (values.practiceblock == 1) {
 
 
 <trial placeshield_mouse>
-/ stimulusframes = [1 = responsearea, shield_center, cannon]
+/ stimulusframes = [1 = responsearea, wall, cannon]
 / inputdevice = mouse
 / validresponse = (responsearea)
 / correctresponse = (responsearea)
@@ -993,7 +960,7 @@ if (values.practiceblock == 1) {
 </text>
 
 <trial showPE> 
-/ stimulusframes = [1 = shield_center, cannonball, cannon, trialcounter]
+/ stimulusframes = [1 = wall, shield_center, cannonball, cannon, trialcounter]
 / trialduration = 1500
 / recorddata = false
 / ontrialbegin = [
@@ -1017,7 +984,7 @@ if (values.practiceblock == 1) {
 </trial>
 
 <trial revealshield>
-/ stimulusframes = [1 = shield, cannon, cannonball]
+/ stimulusframes = [1 = wall, shield, cannon, cannonball]
 / validresponse = (57)
 / correctresponse = (57)
 / beginresponsetime = 500
@@ -1062,10 +1029,10 @@ if (values.practiceblock == 1) {
 <item outcome_responses>
  /1 = "You caught the cannonball. Try to miss it!"
  /2 = "You missed the cannonball. Try to catch it!"
- /3 = " Good work, In this case you caught the ball."
- /4 = "Good work. In this case, you missed the ball.
+ /3 = " Good work, In this case you caught the ball.
  ~n You will now see the full size of your shield after the cannon is shot.
- ~n More than half of the ball must overlap with the shield to make a 'catch' "
+ ~n More than half of the ball must overlap with the shield to make a 'catch'"
+ /4 = "Good work. In this case, you missed the ball." 
  /5 = "Ball Caught"
  /6 = "Ball Missed"
 </item>
@@ -1085,36 +1052,35 @@ if (values.practiceblock == 1) {
 
 
 <trial cannon_outcome>
-/ stimulusframes = [1 = Outcome]
-/ trialduration = 500
+/ stimulusframes = [1 = Outcome, Spacetocontinue]
 / recorddata = true
+/ correctresponse = (57)
+/ timeout = 5000
 / ontrialbegin = [
 	if (values.outcomeindex == 2) {
-		trial.cannon_outcome.trialduration = 1500;	
-	} else if (values.outcomeindex == 4) {
-		 trial.cannon_outcome.trialduration = 4000;	
+		trial.cannon_outcome.timeout = 1500;	
 	} else if (values.outcomeindex == 1) {
-		trial.cannon_outcome.trialduration = 1500;	
+		trial.cannon_outcome.timeout = 1500;	
 	} else if (values.outcomeindex == 3) {
-		trial.cannon_outcome.trialduration = 1000;	
+		trial.cannon_outcome.timeout = 7000;	
 	} else if (values.outcomeindex == 6) {
 		text.Outcome.textcolor = red;
-		trial.cannon_outcome.trialduration = 500;	
+		text.Spacetocontinue.textcolor = white;
+		trial.cannon_outcome.timeout = 500;	
 	} else if (values.outcomeindex == 5) {
 		text.Outcome.textcolor = green;
-		trial.cannon_outcome.trialduration = 500;		
+		text.Spacetocontinue.textcolor = white;
+		trial.cannon_outcome.timeout = 500;		
 	};
 ]
 
 / branch = [
 	if (values.outcomeindex == 2) {
 		return trial.Instructions_PlaceShield;
-	} else if (values.outcomeindex == 4) {
+	} else if (values.outcomeindex == 3) {
 		 return trial.Instructions_RevealShield;
 	} else if (values.outcomeindex == 1) {
 		return trial.Instructions_PlaceShield;
-	} else if (values.outcomeindex == 3) {
-		return trial.InstructionsMiss;
 	} else if (values.outcomeindex == 6) {
 		if (values.practiceblock != 0) {
 		 if (values.cannonballs_missed >= 2) {
