@@ -67,6 +67,7 @@ Creating image stimuli
 / size = (500px, 500px))
 / position = (50%, 50%)
 / rotation = values.Placementangle
+/ erase = false
 </picture>
 
 <picture wall>
@@ -112,8 +113,8 @@ Creating Text stimuli for instructions
 / 1 = "You will know the cannon is ready to fire when you see the CANNON READY signal appear in the center of the screen"
 / 2 = "The green tick mark at the top of the screen represents the center of your shield. 
 ~n you can move the shield with your mouse."
-/ 3 = "Each time the cannon prepares to fire, you should click the portion of the wall where the cannon is aiming with your mouse.
-~n this will place your shield in the cannonball's path" 
+/ 3 = "To place your shield, you should click the portion of the wall where the cannon is aiming with your mouse.
+~n This will place your shield in the cannonball's path" 
 / 4 = "You should place your shield as quickly and accurately as possible once the ''CANNON READY'' signal appears on the screen"
 </item>
 
@@ -198,10 +199,15 @@ Creating Text stimuli for instructions
 / select = sequence
 </text>
 
+<item warning_text>
+/ 1 = "CANNON READY"
+/ 2 = "" 
+</item>
 <text cannon_ready>
-/ items = ("CANNON READY")
-/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 50%)
+/ items = warning_text
+/ fontstyle = ("Arial", 2%, true, false, false, false, 5, 1)
+/ position = (50%, 70%)
+/ select = values.warning_text
 / valign = center
 / halign = center
 / color = red
@@ -283,6 +289,7 @@ Values which will be updated during the trials
 / angmu = 0
 / outcomeindex = 0 
 / cannon = 1
+/ warning_text = 2
 / instructshield = 1
 / cannonballs_caught = 0
 / cannonballs_missed = 0
@@ -476,9 +483,14 @@ Instructions Trials
 
 
 <trial Instructions_PlaceShield_delay>
-/ stimulusframes = [1 = cannon, shield_center, Instructions_shield, Spacetocontinue]
+/ stimulusframes = [1 = cannon, shield_center, Instructions_shield, Spacetocontinue, cannon_ready]
 / timeout = 15000
 / correctresponse = (57)
+/ ontrialbegin = [
+	if (values.instructshield == 4) {
+		values.warning_text = 1;
+	}
+]
 / ontrialend = [
 	values.instructshield += 1
 ]
@@ -491,7 +503,7 @@ Instructions Trials
 </trial>
 
 <trial Instructions_PlaceShield>
-/ stimulusframes = [1 = responsearea, cannon, shield_center, Lockin, Instructions_shield]
+/ stimulusframes = [1 = responsearea, cannon, shield_center, cannon_ready, Lockin, Instructions_shield]
 / inputdevice = mouse
 / correctresponse = (responsearea)
 /ontrialend = [
@@ -918,7 +930,7 @@ if (values.practiceblock == 1) {
 
 
 <trial placeshield_mouse>
-/ stimulusframes = [1 = responsearea, wall, cannon]
+/ stimulusframes = [1 = responsearea, wall, cannon, cannon_ready]
 / inputdevice = mouse
 / validresponse = (responsearea)
 / correctresponse = (responsearea)
