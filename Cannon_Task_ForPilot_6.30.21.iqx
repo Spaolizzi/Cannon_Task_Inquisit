@@ -1,36 +1,35 @@
-**************************************************************************************************************
+﻿**************************************************************************************************************
 Creating base stimuli 
 **************************************************************************************************************
 <item ArcPicture>
- / 2 = "Arc4-removebg-preview.png"
- / 3 = "Arc6-removebg-preview.png"
- / 4 = "Arc8-removebg-preview.png"
- / 5 = "Arc10-removebg-preview.png"
- / 6 = "Arc12-removebg-preview.png"
- / 7 = "Arc14-removebg-preview.png"
- / 8 = "Arc16-removebg-preview.png"
- / 9 = "Arc18-removebg-preview.png"
- / 10 = "Arc20-removebg-preview.png"
- / 11 = "Arc22-removebg-preview.png"
- / 12 = "Arc24-removebg-preview.png"
- / 13 = "Arc26-removebg-preview.png"
- / 14 = "Arc28-removebg-preview.png"
- / 15 = "Arc30-removebg-preview.png"
- / 16 = "Arc32-removebg-preview.png"
- / 17 = "Arc34-removebg-preview.png"
- / 18 = "Arc36-removebg-preview.png"
- / 19 = "Arc38-removebg-preview.png"
- / 20 = "Arc40-removebg-preview.png"
- / 21 = "Arc42-removebg-preview.png"
- / 22 = "Arc44-removebg-preview.png"
- / 23 = "Arc46-removebg-preview.png"
- / 24 = "Arc48-removebg-preview.png"
- / 25 = "Arc50-removebg-preview.png"
- / 26 = "Arc52-removebg-preview.png"
- / 27 = "Arc54-removebg-preview.png"
- / 28 = "Arc56-removebg-preview.png"
- / 29 = "Arc58-removebg-preview.png"
- / 30 = "Arc60-removebg-preview.png"
+ / 3 = "Arc6.png"
+ / 4 = "Arc8.png"
+ / 5 = "Arc10.png"
+ / 6 = "Arc12.png"
+ / 7 = "Arc14.png"
+ / 8 = "Arc16.png"
+ / 9 = "Arc18.png"
+ / 10 = "Arc20.png"
+ / 11 = "Arc22.png"
+ / 12 = "Arc24.png"
+ / 13 = "Arc26.png"
+ / 14 = "Arc28.png"
+ / 15 = "Arc30.png"
+ / 16 = "Arc32.png"
+ / 17 = "Arc34.png"
+ / 18 = "Arc36.png"
+ / 19 = "Arc38.png"
+ / 20 = "Arc40.png"
+ / 21 = "Arc42.png"
+ / 22 = "Arc44.png"
+ / 23 = "Arc46.png"
+ / 24 = "Arc48.png"
+ / 25 = "Arc50.png"
+ / 26 = "Arc52.png"
+ / 27 = "Arc54.png"
+ / 28 = "Arc56.png"
+ / 29 = "Arc58.png"
+ / 30 = "Arc60.png"
 </item>
  
  <item cannonmark>
@@ -63,7 +62,7 @@ Creating image stimuli
 </picture>
 
 <picture shield_center>
-/ items = ("Arc4-removebg-preview.png")
+/ items = ("Arc1.png")
 / size = (500px, 500px))
 / position = (50%, 50%)
 / rotation = values.Placementangle
@@ -71,7 +70,7 @@ Creating image stimuli
 </picture>
 
 <picture wall>
-/ items = ("Arc0-removebg-preview.png")
+/ items = ("Arc0.png")
 / size = (500px, 500px))
 / position = (50%, 50%)
 / rotation = values.Placementangle
@@ -110,12 +109,14 @@ Creating Text stimuli for instructions
 **************************************************************************************************************
 
 <item Instructionsshield>
-/ 1 = "You will know the cannon is ready to fire when you see the CANNON READY signal appear in the center of the screen"
+/ 1 = "You will know the cannon is ready to fire when you see the 
+~n CANNON READY signal appear in the center of the screen"
 / 2 = "The green tick mark at the top of the screen represents the center of your shield. 
 ~n you can move the shield with your mouse."
-/ 3 = "To place your shield, you should click the portion of the wall where the cannon is aiming with your mouse.
-~n This will place your shield in the cannonball's path" 
-/ 4 = "You should place your shield as quickly and accurately as possible once the ''CANNON READY'' signal appears on the screen"
+/ 3 = "To place your shield, you should click the portion of the wall where the cannon is 
+~n aiming with your mouse. This will place your shield in the cannonball's path." 
+/ 4 = "You should place your shield as quickly and accurately as possible 
+~n once the ''CANNON READY'' signal appears on the screen"
 </item>
 
 <text Instructions_shield>
@@ -206,7 +207,7 @@ Creating Text stimuli for instructions
 <text cannon_ready>
 / items = warning_text
 / fontstyle = ("Arial", 2%, true, false, false, false, 5, 1)
-/ position = (50%, 70%)
+/ position = (50%, 65%)
 / select = values.warning_text
 / valign = center
 / halign = center
@@ -461,7 +462,7 @@ Instructions Trials
 </text>
 
 <trial Instructions_BeginTask>
-/ stimulusframes = [1 = shield_center, Instructions_cannon, cannon, Spacetocontinue]
+/ stimulusframes = [1 = wall, shield_center, Instructions_cannon, cannon, Spacetocontinue]
 / validresponse = (57)
 / beginresponsetime = 500
 / ontrialbegin = [
@@ -483,7 +484,7 @@ Instructions Trials
 
 
 <trial Instructions_PlaceShield_delay>
-/ stimulusframes = [1 = cannon, shield_center, Instructions_shield, Spacetocontinue, cannon_ready]
+/ stimulusframes = [1 = cannon, wall, shield_center, Instructions_shield, Spacetocontinue, cannon_ready]
 / timeout = 15000
 / correctresponse = (57)
 / ontrialbegin = [
@@ -503,9 +504,12 @@ Instructions Trials
 </trial>
 
 <trial Instructions_PlaceShield>
-/ stimulusframes = [1 = responsearea, cannon, shield_center, cannon_ready, Lockin, Instructions_shield]
+/ stimulusframes = [1 = responsearea, cannon, wall, shield_center, cannon_ready, Lockin, Instructions_shield]
 / inputdevice = mouse
 / correctresponse = (responsearea)
+/ ontrialbegin = [
+	picture.shield_center.rotation = 20;
+]
 /ontrialend = [
     values.selected_x = 1px*trial.Instructions_PlaceShield.responsex;
 	values.selected_y = 1px*trial.Instructions_PlaceShield.responsey;
@@ -526,7 +530,7 @@ Instructions Trials
 
 
 <trial Instructions_CannonOutcome>
-/ stimulusframes = [1 = cannon, shield_center, cannonball]
+/ stimulusframes = [1 = cannon, wall, shield_center, cannonball]
 / correctresponse = (57)
 / trialduration = 2000
 / beginresponsetime = 1000
@@ -1200,6 +1204,7 @@ Reset Blocks
 Experiment Sequence
 **************************************************************************************************************	  
 <block InstructionBlock>
+/ screencolor = aquamarine
 / trials = [
 1 = Instructions_BeginTask;
 2 = Instructions_PlaceShield;
@@ -1213,6 +1218,7 @@ Experiment Sequence
 </block> 
 
 <block begin_round>
+/ screencolor = aquamarine
 / onblockbegin = [
 	values.trialnum = 0;
 	values.practiceblock = 4;
@@ -1232,7 +1238,7 @@ Experiment Sequence
 / onblockbegin = [
 	values.blocknum += 1;
 	values.trialnum = 0;
-	values.practiceblock = 0
+	values.practiceblock = 0;
 
 ]
 / trials = [

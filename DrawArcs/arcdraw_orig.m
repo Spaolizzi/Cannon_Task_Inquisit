@@ -15,6 +15,7 @@ ARC=min_arc:d_arc:max_arc;
 for ct1=1:length(ARC)
 %% Options
 %Define the green arc
+arc=ARC(ct1);
 theta_max=ARC(ct1); %Angle of the arc
 thickness=20; %thickness of green arc
 %theta_arc=linspace(0,theta_max,200); %Angles of arc
@@ -22,7 +23,7 @@ arc_angles=linspace(-arc/2,arc/2,200);
 
 %Define the gray circle
 theta_circ=linspace(0,2*pi,200);%angles in circle
-thickness_circ=0;% thickness of the circle
+thickness_circ=17;% thickness of the circle
 circ_coords=[cos(theta_circ);sin(theta_circ)];
 circ_color=0.4; %"Grayness" of the circle (0 is black, 1 is white)
 
@@ -36,6 +37,8 @@ for ct=1:length(ROT)
         sin(theta)];   
     fig=figure;
     hold on   
+    circle=plot(circ_coords(1,:),circ_coords(2,:),'LineWidth',thickness_circ);
+    circle.Color=[circ_color,circ_color,circ_color];
     plot(x(1,:),x(2,:),'g','LineWidth', thickness)
     axis equal
     axis([-1.2,1.2,-1.2,1.2])   
