@@ -84,7 +84,13 @@ Creating image stimuli
 / position = (50%, 50%)
 / color = white
 / erase = false
-/ color = azure
+</shape>
+
+<shape ClicktoContinue>
+/ shape = rectangle
+/ size = (20px, 20px)
+/ position = (50%, 50%)
+/ color = red
 </shape>
 
 
@@ -140,7 +146,8 @@ Creating Text stimuli for instructions
 /2 = "On some trials the shield will be large and on some trials it will be small. 
 ~n You cannot know the size of the shield until the cannon is fired, 
 ~n so it is best to try to catch the ball on every trial."
-/3 = "You'll have some practice now to get a sense of how the shield size varies." 
+/3 = "You'll have some practice now to get a sense of how the shield size varies.
+ ~n Once you click the red box, the next practice round will start." 
 </item>
 
 <text Practice_ShieldSize>
@@ -171,8 +178,8 @@ Creating Text stimuli for instructions
 
 <item CannonNotAccurate>
 /1= "While the cannon has been pretty accurate so far in practice, the real cannon is not as accurate. 
-~n This means the cannonball will no longer land exactly where the cannon is aiming." 
-/2 = "~n Your best strategy is still to place the shield at the center of the cannon's aim. 
+~n This means the cannonball will no longer land exactly where the cannon is aiming.
+~n Your best strategy is still to place the shield at the center of the cannon's aim. 
 ~n The cannon can still re-aim unpredictably and shots might be fired in any direction."
 </item>
 
@@ -198,7 +205,7 @@ Creating Text stimuli for instructions
 <text PracticeBlock_CannonNotVisible>
 / items = Practice_CannonNotVisible
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 50%)
+/ position = (50%, 30%)
 / size = (80%, 50%)
 / txbgcolor = azure
 / hjustify = center
@@ -222,8 +229,8 @@ Creating Text stimuli for instructions
 
 </text>
 
-<text Spacetocontinue>
-/ items = ("Press SPACE to continue")
+<text ClickBoxToContinue>
+/ items = ("Click the red box to continue")
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / position = (50%, 85%)
 / txbgcolor = azure
@@ -236,7 +243,7 @@ Creating Text stimuli for instructions
 ~n you should use your mouse to click the part of the circle where the cannon is aimed. 
 ~n Click as quickly and accurately as possible once the CANNON READY signal appears.")
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 50%)
+/ position = (50%, 30%)
 / size = (90%, 90%)
 / txbgcolor = azure
 / valign = center
@@ -483,8 +490,19 @@ Instructions Trials
 
 
 <trial Phase_starts>
-/ stimulusframes = [1 = Phase_Starts, Spacetocontinue]
-/ validresponse = (57)
+/ stimulusframes = [1 = Phase_Starts, ClickBoxToContinue, ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
+/ ontrialbegin = [
+	if ( values.practiceblock >= 3){
+		shape.ClicktoContinue.vposition = 50%;
+		text.Phase_starts.vposition = 30%;
+	} else {
+		shape.ClicktoContinue.vposition = 80%;
+		text.Phase_starts.vposition = 50%;
+	}
+]
 </trial>
 
 <text Instructions_cannon>
@@ -502,8 +520,10 @@ Instructions Trials
 </text>
 
 <trial Instructions_BeginTask>
-/ stimulusframes = [1 = Instructions_cannon, Spacetocontinue]
-/ validresponse = (57)
+/ stimulusframes = [1 = Instructions_cannon, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / beginresponsetime = 500
 / ontrialbegin = [
 	if (values.practiceblock == 5 || values.practiceblock == 6) {
@@ -515,6 +535,8 @@ Instructions Trials
 	values.cond= 0;
 	values.ang = 0;
 	values.practiceblock = 1;
+	values.instructshield = 1;
+	shape.ClicktoContinue.vposition = 80%;
 	]
 / branch = [
 	return trial.Instructions_PlaceShield_delay;
@@ -524,12 +546,15 @@ Instructions Trials
 
 
 <trial Instructions_PlaceShield_delay>
-/ stimulusframes = [1 = cannon, wall, shield_center, Instructions_shield, Spacetocontinue, cannon_ready]
+/ stimulusframes = [1 = responsearea, cannon, wall, shield_center, Instructions_shield, ClickBoxToContinue,  ClicktoContinue, cannon_ready]
 / timeout = 15000
-/ correctresponse = (57)
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / ontrialbegin = [
 	if (values.instructshield == 3) {
 		values.warning_text = 1;
+		shape.responsearea.color = white;
 	} else {
 		values.warning_text = 2;
 	}
@@ -540,6 +565,7 @@ Instructions Trials
 / branch = [
 	if(values.instructshield <= 3) {
 		return trial.Instructions_PlaceShield_delay;
+		values.instructshield = 0;
 	} else {
 		return trial.lockin
 	}
@@ -548,17 +574,47 @@ Instructions Trials
 </trial>
 
 <trial lockin>
-/ stimulusframes = [1 = Lockin, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = Lockin, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
+/ ontrialbegin = [
+	 shape.ClicktoContinue.vposition = 50%; 
+]
+</trial>
+
+<text practiceround_click>
+/ items = ("Once you click the red box, the next set of practice trials will start.")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1), 
+/ position = (50%, 30%)
+/ size = (90%, 20%)
+/ valign = center
+/ txbgcolor = azure
+/ halign = center
+/ vjustify = center
+/ select = sequence
+
+</text>
+
+<trial ClicktoContinue>
+/ stimulusframes = [1 = ClickBoxToContinue, ClicktoContinue, practiceround_click]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
+/ ontrialbegin = [
+	 shape.ClicktoContinue.vposition = 50%; 
+]
 </trial>
 
 <trial Instructions_PlaceShield>
 / stimulustimes = [1 = responsearea, cannon, wall, Instructions_shield; 200 = cannon_ready]
 / inputdevice = mouse
 / correctresponse = (responsearea)
+/ timeout = 5000
 / ontrialbegin = [
 	picture.shield_center.rotation = 20;
 	values.warning_text = 1;
+	
 ]
 /ontrialend = [
     values.selected_x = 1px*trial.Instructions_PlaceShield.responsex;
@@ -582,8 +638,7 @@ Instructions Trials
 
 <trial Instructions_CannonOutcome>
 / stimulusframes = [1 = cannon, wall, shield_center, cannonball]
-/ correctresponse = (57)
-/ timeout = 2500
+/ timeout = 750
 / beginresponsetime = 1000
 / branch = [
 	if (values.outcome <= (values.placementAngle + 3) && values.outcome >= (values.placementAngle - 3)) {
@@ -624,35 +679,60 @@ Instructions Trials
 </trial>
 
 <trial Instructions_RevealShield>
-/ stimulusframes = [1 = Practice_ShieldSize, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = Practice_ShieldSize, ClickBoxToContinue, ClicktoContinue]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
+/ timeout = 10 000
 / ontrialbegin = [
-	 values.practiceblock = 2
-	 
+	 values.practiceblock = 2;
+	 if (values.instructshield == 3){
+		 shape.ClicktoContinue.vposition = 50%; 
+		 text.Practice_ShieldSize.vposition = 30%; 
+		 values.instructshield = 0;
+	 }
 ]
+/ ontrialend = [
+	values.instructshield += 1;
+]
+
 </trial>
 
 
 <trial PracticeBlock_CannonMoves>
-/ stimulusframes = [1 = PracticeBlock_CannonMoves, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 =  ClickBoxToContinue, PracticeBlock_CannonMoves, ClicktoContinue]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
+/ ontrialbegin = [
+	shape.ClicktoContinue.vposition = 80%;
+	text.ClickBoxToContinue.vposition = 85%;
+]
 / ontrialend = [
 	values.practiceblock = 3;
 ]
 </trial>
 
 <trial PracticeBlock_CannonNotAccurate>
-/ stimulusframes = [1 = PracticeBlock_CannonNotAccurate, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = PracticeBlock_CannonNotAccurate, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
+/ ontrialbegin = [
+	shape.ClicktoContinue.vposition = 80%;
+	text.ClickBoxToContinue.vposition = 85%;
+]
 / ontrialend = [
 	values.practiceblock = 3;
-	values.cond= "CHANGEPOINT";
+	values.cond = "CHANGEPOINT";
 ]
 </trial>
 
 <trial PracticeBlock_CannonNotVisible>
-/ stimulusframes = [1 = PracticeBlock_CannonNotVisible, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = PracticeBlock_CannonNotVisible, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / ontrialend = [
 	values.practiceblock = 5;
 	values.cannon = 2;
@@ -668,7 +748,7 @@ Instructions Trials
 
 <item EndPractice>
 /1 = "You have completed the practice block!
-~n now that you understand the game, you will play a few more rounds to earn more money."
+~n Now that you understand the game, you will play a few more rounds to earn more money."
 /2 = "In each round, the cannon will change how it fires. 
 ~n You'll get a few practice trials at the beginning of each round to learn about this."
 /3 = "You'll want to figure out the best strategy each round 
@@ -690,11 +770,15 @@ Instructions Trials
 
 
 <trial EndPractice>
-/ stimulusframes = [1 = EndPractice, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = EndPractice, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / ontrialbegin = [
 	values.blockearnings = values.cannonballs_caught*values.centsearned;
 	values.totalearnings = values.blockearnings + values.totalearnings;
+	shape.ClicktoContinue.vposition = 80%;
+	text.ClickBoxToContinue.vposition = 85%;
 ]
 / ontrialend = [
 	values.practiceblock = 4;
@@ -716,7 +800,7 @@ Instructions Trials
 <text Reminder>
 / items = reminder 
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 50%)
+/ position = (50%, 30%)
 / size = (80%, 50%)
 / txbgcolor = azure
 / hjustify = center
@@ -726,8 +810,14 @@ Instructions Trials
 
 
 <trial Reminder>
-/ stimulusframes = [1 = Reminder, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = Reminder, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
+/ ontrialbegin = [
+	shape.ClicktoContinue.vposition = 50%;
+	text.ClickBoxToContinue.vposition = 85%;
+]
 / branch = [
 	trial.mainloop
 ]
@@ -754,18 +844,22 @@ Experimental Block instructions
 / txbgcolor = azure
 / hjustify = center
 / vjustify = center
-/ select = values.block
+/ select = list.Condition.currentindex
 </text>
 
 
 <trial begin_block> 
-/ stimulusframes = [1 = block_start, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = block_start, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / recorddata = false
 / ontrialbegin = [
 	values.blockearnings = values.cannonballs_caught*values.centsearned;
 	values.totalearnings = values.totalearnings + values.blockearnings;
 	values.angmu = expressions.angsurprise;
+	shape.ClicktoContinue.vposition = 80%;
+	text.ClickBoxToContinue.vposition = 85%;
 
 	values.practiceblock = 4;
 	if (values.cond== "CHANGEPOINT") {
@@ -796,22 +890,27 @@ Experimental Block instructions
 <text start_task>
  /items = start_task
  / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 50%)
+/ position = (50%, 30%)
 / size = (80%, 50%)
 / hjustify = center
 / vjustify = center
-/ select = values.block
+/ select = list.Condition.currentindex
 / txbgcolor = azure
 </text>
 
 
 
 <trial start_task> 
-/ stimulusframes = [1 = start_task, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = start_task, ClickBoxToContinue, ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / recorddata = false
 / ontrialbegin = [
 	values.blockearnings = values.cannonballs_caught*values.centsearned;
+	shape.ClicktoContinue.vposition = 50%;
+	text.ClickBoxToContinue.vposition = 85%;
+	
 
 ]
 / ontrialend = [
@@ -834,8 +933,10 @@ Experimental Block instructions
 </text>
 
 <trial cannonisaimed> 
-/ stimulusframes = [1 = cannonisaimed, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = cannonisaimed, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / recorddata = false
 / branch = [
 	return trial.description
@@ -860,13 +961,15 @@ Experimental Block instructions
 / hjustify = center
 / vjustify = center
 / valign = center
-/ select = values.block
+/ select = list.Condition.currentindex
 / txbgcolor = azure
 </text>
 
 <trial description> 
-/ stimulusframes = [1 = description, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = description, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / recorddata = false
 / branch = [
 	return trial.youwillnotsee
@@ -876,13 +979,21 @@ Experimental Block instructions
 
 <item youwillsee>
 /1 = "In this practice round, you will see the cannon. Try to place 
- ~n your shield where it is aimed in order to catch balls and earn money.
- ~n
-~n press SPACE to start the practice round"
+ ~n your shield where it is aimed in order to catch cannonballs.
+ ~n During these practice rounds, you will earn <%values.centsearned%> cents for your catches.
+  ~n
+   ~n
+    ~n
+	~n
+~n Click the red box to start the practice round"
 /2 = "In this practice round you will not see the cannon, 
- ~n but still have to infer its aim in order to catch balls and earn money.
- ~n
-~n press SPACE to start the practice round"
+ ~n but still have to infer its aim in order to catch cannonballs and earn money.
+ ~n You will earn <%values.centsearned%> cents for your catches in this round.
+  ~n
+  ~n
+   ~n
+    ~n
+~n Click the red box to start the practice round"
 
 
 </item>
@@ -899,9 +1010,14 @@ Experimental Block instructions
 </text>
 
 <trial youwillnotsee> 
-/ stimulusframes = [1 = youwillnotsee]
-/ correctresponse = (57)
+/ stimulusframes = [1 = youwillnotsee, ClicktoContinue]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / recorddata = false
+/ ontrialbegin = [
+	shape.ClicktoContinue.vposition = 50%;
+]
 / branch = [
 	if (values.practiceblock == 5){
 		return trial.PracticeBlock_CannonNotVisible;
@@ -949,7 +1065,7 @@ if (values.practiceblock == 1) {
 		if (values.cond == "ODDBALL"){ //Oddball
 			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
 			values.outcome = expressions.outcome; //cannonnball location
-		} else if (values.cond == "CHANGEPOINT") {
+		} else if (values.cond== "CHANGEPOINT") {
 			values.outcome = expressions.outcome; // cannnonball
 			}
    }
@@ -1046,7 +1162,7 @@ if (values.practiceblock == 1) {
 </trial>
 
 <text trialcounter>
-/items = ("repsonse: <%trial.placeshield_mouse.response%>")
+/items = ("index <%values.instructshield%>")
 / position = (80, 15)
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / valign = center
@@ -1082,8 +1198,9 @@ if (values.practiceblock == 1) {
 
 <trial revealshield>
 / stimulusframes = [1 = wall, shield, cannon, cannonball]
-/ validresponse = (57)
-/ correctresponse = (57)
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / beginresponsetime = 500
 / trialduration = 750
 / ontrialbegin = [
@@ -1094,18 +1211,18 @@ if (values.practiceblock == 1) {
 	};
 ]
 / branch = [
-	if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber) && values.outcome >= (values.placementAngle- picture.shield.currentitemnumber)){
+	if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber +1) && values.outcome >= (values.placementAngle- picture.shield.currentitemnumber +1)){
 		values.hitmiss = 1;
 		values.outcomeindex = 5;
 		values.cannonballs_caught += 1;
 	} else if (values.placementAngle + picture.shield.currentitemnumber >= 360){
-		if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber - 360)) {
+		if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber - 360 +1)) {
 			values.hitmiss = 1;
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
 			}
 	} else if (values.placementAngle - picture.shield.currentitemnumber < 0){
-		if (values.outcome >= (values.placementAngle- picture.shield.currentitemnumber + 360)){
+		if (values.outcome >= (values.placementAngle- picture.shield.currentitemnumber + 360 +1)){
 			values.hitmiss = 1;	
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
@@ -1128,9 +1245,9 @@ if (values.practiceblock == 1) {
 //calculate hit or miss
 
 <item outcome_responses>
- /1 = "You didn't place your shield in time. Cannonball missed!"
+ /1 = "You didn't place your shield in time. Cannonball missed."
  /2 = "You missed the cannonball. Try to catch it!"
- /3 = " Good work. Now, you know how to place your shield to give you the best chance of catching the ball!"
+ /3 = "Now, you know how to place your shield to give you the best chance of catching the ball."
  /4 = "Good work. In this case, you missed the ball." 
  /5 = "Ball Caught"
  /6 = "Ball Missed"
@@ -1143,7 +1260,7 @@ if (values.practiceblock == 1) {
 / items = outcome_responses
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
 / position = (50%, 50%)
-/ size = (90%, 50%)
+/ size = (90%, 90%)
 / valign = center
 / halign = center
 / vjustify = center
@@ -1152,10 +1269,12 @@ if (values.practiceblock == 1) {
 
 
 <trial cannon_outcome>
-/ stimulusframes = [1 = Outcome, Spacetocontinue]
+/ stimulusframes = [1 = Outcome, ClicktoContinue, ClickBoxToContinue]
 / recorddata = true
-/ correctresponse = (57)
-/ timeout = 5000
+/ timeout = 2000
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / ontrialbegin = [
 	if (values.outcomeindex == 2) {
 		trial.cannon_outcome.timeout = 3000;	
@@ -1163,27 +1282,34 @@ if (values.practiceblock == 1) {
 		trial.cannon_outcome.timeout = 2000;
 		text.Outcome.textcolor = black;	
 	} else if (values.outcomeindex == 3) {
-		trial.cannon_outcome.timeout = 10000;
+		trial.cannon_outcome.timeout = 5000;
 		text.Outcome.textcolor = black;
-		text.Spacetocontinue.textbgcolor = azure;	
+		text.ClickBoxToContinue.textbgcolor = azure;	
 		text.Outcome.textbgcolor = azure;	
+		shape.ClicktoContinue.vposition = 80%;
+		text.ClickBoxToContinue.vposition = 85%;
 	} else if (values.outcomeindex == 6) {
+		text.Outcome.vposition = 50%;
+		shape.ClicktoContinue.vposition = 200%;
+		text.ClickBoxToContinue.vposition = 200%;
 		text.Outcome.textcolor = red;
 		if (values.practiceblock != 6) {
-			text.Spacetocontinue.textbgcolor = azure;
+			text.ClickBoxToContinue.textbgcolor = azure;
 			text.Outcome.textbgcolor = azure;
 		} else {
-			text.Spacetocontinue.textbgcolor = white;
+			text.ClickBoxToContinue.textbgcolor = white;
 			text.Outcome.textbgcolor = white;
 		}
 		trial.cannon_outcome.timeout = 300;	
 	} else if (values.outcomeindex == 5) {
 		text.Outcome.textcolor = green;
+		shape.ClicktoContinue.vposition = 200%;
+		text.ClickBoxToContinue.vposition = 200;
 		if (values.practiceblock != 6) {
-			text.Spacetocontinue.textbgcolor = azure;
+			text.ClickBoxToContinue.textbgcolor = azure;
 			text.Outcome.textbgcolor = azure;
 		} else {
-			text.Spacetocontinue.textbgcolor = white;
+			text.ClickBoxToContinue.textbgcolor = white;
 			text.Outcome.textbgcolor = white;
 		}
 		trial.cannon_outcome.timeout = 300;		
@@ -1191,40 +1317,37 @@ if (values.practiceblock == 1) {
 ]
 
 / branch = [
-	if (values.outcomeindex == 1) {
-			return trial.mainloop
-	}else if (values.outcomeindex == 3) {
-		 return trial.Instructions_RevealShield;
+	if (values.outcomeindex == 3) {
+		return trial.Instructions_RevealShield;
 	} else if (values.outcomeindex == 1) {
 		if (values.trialnum >= 3 && values.practiceblock == 6){
 			return trial.Howyoudid; 
 		 } else if (values.practiceblock == 6 && values.trialnum < 3){
 			return trial.mainloop; 
-		 } else if (values.practiceblock <= 5) {
+		 } else if (values.practiceblock == 1) {
 			 return trial.Instructions_PlaceShield;
-		 }	
-	} else if (values.outcomeindex == 6) {
+		 }
+	} else if (values.outcomeindex == 6){
 		if (values.practiceblock != 6) {
-		 if (values.cannonballs_missed >= 2) {
-			return trial.Reminder
-			}
-		 };
-		 if (values.trialnum >= 3 && values.practiceblock == 6){
+			if (values.cannonballs_missed >= 3) {
+				return trial.Reminder;
+				values.cannonballs_missed = 0;
+			}	
+		} else if (values.trialnum >= 3 && values.practiceblock == 6){
 			return trial.Howyoudid; 
-		 }  } else if (values.practiceblock == 6 && values.trialnum < 3){
-			return trial.mainloop;
-			} 
-		if (values.practiceblock != 6) {
+		 } else if (values.practiceblock == 6 && values.trialnum < 3){
+			return trial.mainloop; 
+		 } else if (values.practiceblock != 6) {
 			if (values.cannonballs_caught < 2){
 				return trial.mainloop
 			}
+		}
 	} else if (values.outcomeindex == 5) {
-		if (values.practiceblock == 6 && values.trialnum >= 3){
+		if (values.trialnum >= 3 && values.practiceblock == 6){
 			return trial.Howyoudid; 
-		 } else if (values.practiceblock == 6 && values.trialnum < 3 ){
-			return trial.mainloop;
-			} 
-		if (values.practiceblock != 6) {
+		 } else if (values.practiceblock == 6 && values.trialnum < 3){
+			return trial.mainloop; 
+		 } else if (values.practiceblock != 6) {
 			if (values.cannonballs_caught < 2){
 				return trial.mainloop
 			}
@@ -1239,13 +1362,13 @@ if (values.practiceblock == 1) {
 Reset Blocks
 ********************************************************************************************
 <item Howyoudid>
-/1 = " In this block you caught <%values.cannonballs_caught%> of the cannonballs and earned <%values.blockearnings%>!"
+/1 = " In this block you caught <%values.cannonballs_caught%> of the cannonballs and earned <%values.blockearnings%> cents. "
 </item>
 
 <text Howyoudid>
 / items = Howyoudid
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 50%)
+/ position = (50%, 30%)
 / size = (80%, 50%)
 / hjustify = center
 / vjustify = center
@@ -1253,22 +1376,27 @@ Reset Blocks
 </text>
 
 <trial Howyoudid>
-/ stimulusframes = [1 = Howyoudid, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = Howyoudid, ClickBoxToContinue, ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / ontrialbegin = [
 	values.blockearnings = values.cannonballs_caught*values.centsearned;
 	values.totalearnings = values.totalearnings + values.blockearnings;
+	shape.ClicktoContinue.vposition = 50%;
+	text.ClickBoxToContinue.vposition = 85%;
 ]
 / ontrialend = [
 	values.angmu = expressions.angsurprise;
 	values.ang = expressions.outcome;
 	values.cannonballs_caught = 0;
 	values.cannonballs_missed = 0;
+	
 ]
 </trial>
 
 <item EndPracticePhase>
-/1 = "You have completed this practice round! Even though it's just practice, you've earned <%values.blockearnings%> cents!"
+/1 = "You have completed this practice round and earned <%values.blockearnings%> cents. "
 </item>
 
 <text EndPracticePhase>
@@ -1282,14 +1410,19 @@ Reset Blocks
 </text>
 
 <trial EndPracticePhase>
-/ stimulusframes = [1 = EndPracticePhase, Spacetocontinue]
-/ correctresponse = (57)
+/ stimulusframes = [1 = EndPracticePhase, ClickBoxToContinue,  ClicktoContinue,]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
 / ontrialbegin = [
 	if (values.practiceblock == 4) {
 		values.practiceblock = 5;
 	}
 	values.blockearnings = values.cannonballs_caught*values.centsearned;
 	values.totalearnings = values.totalearnings + values.blockearnings;
+	shape.ClicktoContinue.vposition = 80%;
+	text.ClickBoxToContinue.vposition = 85%;
+	
 ]
 / branch = [
 	if (values.practiceblock == 5) {
@@ -1303,19 +1436,21 @@ Reset Blocks
 
 <text TotalEarnings>
 / items = ("You have now completed the CANNONBALL TASK. 
-~n In total, you earned <%values.totalearnings%> for your performance!
-~n press space to continue with the study")
+~n In total, you earned <%values.totalearnings%> cents for your performance.
+~n Click the red box to continue with the study")
 / fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 50%)
+/ position = (50%, 30%)
 / size = (80%, 50%)
 / hjustify = center
 / vjustify = center
 </text>
 
 <trial Total_Earnings>
-/ stimulusframes = [1 = TotalEarnings, Spacetocontinue]
-/ correctresponse = (57)
-/ trialduration = 3000
+/ stimulusframes = [1 = TotalEarnings, ClickBoxToContinue, ClicktoContinue]
+/ inputdevice = mouse
+/ validresponse = (Clicktocontinue)
+/ correctresponse = (Clicktocontinue)
+/ trialduration = 5000
 </trial>
 
 
@@ -1326,6 +1461,7 @@ Experiment Sequence
 / screencolor = azure
 / onblockbegin = [
 	values.practiceblock = 1;
+	shape.responsearea.color = azure;
 ]
 / trials = [
 1 = Phase_starts;
@@ -1334,7 +1470,8 @@ Experiment Sequence
 4-5 = Instructions_RevealShield;
 6-8 = mainloop;
 9 = PracticeBlock_CannonMoves;
-10-11 = PracticeBlock_CannonNotAccurate;
+10 = PracticeBlock_CannonNotAccurate;
+11 = Clicktocontinue;
 12-14 = mainloop;
 15-17 = EndPractice;
 ]
@@ -1346,6 +1483,7 @@ Experiment Sequence
 	values.trialnum = 0;
 	values.practiceblock = 4;
 	values.cond= list.Condition.nextvalue;
+	values.blocknum = 0;
 ]
 
 / trials = [
@@ -1360,11 +1498,14 @@ Experiment Sequence
 </block>
 
 <block MainBlock>
+/ screencolor = white
 / onblockbegin = [
 	values.blocknum += 1;
 	values.trialnum = 0;
 	values.practiceblock = 6;
 	text.Phase_Starts.textbgcolor = "white";
+	text.ClickBoxToContinue.textbgcolor = "white";
+
 
 ]
 / trials = [
@@ -1375,6 +1516,7 @@ Experiment Sequence
 </block> 
 
 <block Experiment_end>
+/ screencolor = white
 / trials = [
 1 = Total_Earnings;
 ]
@@ -1384,7 +1526,7 @@ Experiment Sequence
 / blocks = [ 
 1 = InstructionBlock;
 2 = begin_round;
-2-6 = Mainblock;
+3-6 = Mainblock;
 7 = begin_round;
 8-11 = Mainblock;
 12 = Experiment_end;
