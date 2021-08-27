@@ -2,34 +2,62 @@
 Creating base stimuli 
 **************************************************************************************************************
 <item ArcPicture>
- / 3 = "Arc6.png"
- / 4 = "Arc8.png"
- / 5 = "Arc10.png"
- / 6 = "Arc12.png"
- / 7 = "Arc14.png"
- / 8 = "Arc16.png"
- / 9 = "Arc18.png"
- / 10 = "Arc20.png"
- / 11 = "Arc22.png"
- / 12 = "Arc24.png"
- / 13 = "Arc26.png"
- / 14 = "Arc28.png"
- / 15 = "Arc30.png"
- / 16 = "Arc32.png"
- / 17 = "Arc34.png"
- / 18 = "Arc36.png"
- / 19 = "Arc38.png"
- / 20 = "Arc40.png"
- / 21 = "Arc42.png"
- / 22 = "Arc44.png"
- / 23 = "Arc46.png"
- / 24 = "Arc48.png"
- / 25 = "Arc50.png"
- / 26 = "Arc52.png"
- / 27 = "Arc54.png"
- / 28 = "Arc56.png"
- / 29 = "Arc58.png"
- / 30 = "Arc60.png"
+ / 5 = "Arc5.png"
+ / 6 = "Arc6.png"
+ / 7 = "Arc7.png"
+ / 8 = "Arc8.png"
+ / 9 = "Arc9.png"
+ / 10 = "Arc10.png"
+ / 11 = "Arc11.png"
+ / 12 = "Arc12.png"
+ / 13 = "Arc13.png"
+ / 14 = "Arc14.png"
+ / 15 = "Arc15.png"
+ / 16 = "Arc16.png"
+ / 17 = "Arc17.png"
+ / 18 = "Arc18.png"
+ / 19 = "Arc19.png"
+ / 20 = "Arc20.png"
+ / 21 = "Arc21.png"
+ / 22 = "Arc22.png"
+ / 23 = "Arc23.png"
+ / 24 = "Arc24.png"
+ / 25 = "Arc25.png"
+ / 26 = "Arc26.png"
+ / 27 = "Arc27.png"
+ / 28 = "Arc28.png"
+ / 29 = "Arc29.png"
+ / 30 = "Arc30.png"
+ / 31 = "Arc31.png"
+ / 32 = "Arc32.png"
+ / 33 = "Arc33.png"
+ / 34 = "Arc34.png"
+ / 35 = "Arc35.png"
+ / 36 = "Arc36.png"
+ / 37 = "Arc37.png"
+ / 38 = "Arc38.png"
+ / 39 = "Arc39.png"
+ / 40 = "Arc40.png"
+ / 41 = "Arc41.png"
+ / 42 = "Arc42.png"
+ / 43 = "Arc43.png"
+ / 44 = "Arc44.png"
+ / 45 = "Arc45.png"
+ / 46 = "Arc46.png"
+ / 47 = "Arc47.png"
+ / 48 = "Arc48.png"
+ / 49 = "Arc49.png"
+ / 50 = "Arc50.png"
+ / 51 = "Arc51.png"
+ / 52 = "Arc52.png"
+ / 53 = "Arc53.png"
+ / 54 = "Arc54.png"
+ / 55 = "Arc55.png"
+ / 56 = "Arc56.png"
+ / 57 = "Arc57.png"
+ / 58 = "Arc58.png"
+ / 59 = "Arc59.png"
+ / 60 = "Arc60.png"
 </item>
  
  <item cannonmark>
@@ -229,10 +257,11 @@ Creating Text stimuli for instructions
 </text>
 
 <text ValueTracker>
-/ items = ("shield_size = <%values.angmu%>
-~n cannonball rotation = <%picture.cannonball.rotation%>
-~n block earnings = <%values.blockearnings%>
-~n cannonballs caught <%values.cannonballs_caught%>
+/ items = ("shield_size = <%values.shield_size%>
+~n shield_size = <%picture.shield.currentitem%>
+~n cannonball rotation = <%picture.cannonball.rotation%>, <%values.outcome%>
+~n update = <%values.update%>
+~n distmean <%values.placementangle%>
 
 ")
 / fontstyle = ("Arial", 2%, true, false, false, false, 5, 1)
@@ -267,7 +296,7 @@ Values which will be updated during the trials
 <values>
 / StaySwitch = 0 // value represented whether cannon should stay in same spot(0) or switch to a new one(1)):
 / percentTrialsStay = 0.86
-/ ang = 0 // angle of cannonball strike, updated throughout the task (0-360)
+/ outcome = 0 // angle of cannonball strike, updated throughout the task (0-360)
 / practiceblock = 1 // update through various phases (1-5 are practice or training conditions, 0 is )
 / hitmiss = 0
 / responseTime = ""
@@ -289,13 +318,13 @@ Values which will be updated during the trials
 /pacetocontinue = 1
 / cond = 0
 / condcolor = 0
-/outcome = 0
 / blockearnings = 0
 / TAC = 0 // trials after changepoint
-/ update = 0 // absolute size of update from previous shield position
-/distmean = 0 // distance of placement from current angmu
+/ update = 0 // size of update from previous shield position
+/ distmean = 0 // distance of placement from current angmu
 / no_response = 0
-
+/ shield_size = 3
+/prev_placementAngle = 0
 
 //values for calculating response angle
 / anglesize = 0
@@ -323,11 +352,11 @@ Useful expressions
 <expressions>
 /percentTrialsSwitch = 1-values.percentTrialsStay
 / circleproportion = 0.25
-/ angleup = values.placementAngle + picture.shield.currentitemnumber + 2
-/ angledown = values.placementAngle- picture.shield.currentitemnumber -2
+/ angleup = values.placementAngle + values.shield_size
+/ angledown = values.placementAngle- values.shield_size
 / angoddball = randgaussian(0, 2.99)
 / centsearned = values.cannonballs_caught*values.centsearned
-/ outcome = randgaussian(values.angmu, values.conc)
+/ calculateoutcome = randgaussian(values.angmu, values.conc)
 / angsurprise = rand(0, 360)
 //Expressions for calculating angles
 / centerx = 0.5*display.canvaswidth
@@ -393,7 +422,125 @@ Useful expressions
 	} else {
 		values.placementAngle = 360;
 	};
+};
+
+/ calculateshieldsize = {
+	
+if(picture.shield.currentitem == "Arc6.png"){
+	values.shield_size = 6
+} else if(picture.shield.currentitem == "Arc7.png"){
+	values.shield_size = 7
+} else if(picture.shield.currentitem == "Arc8.png"){
+	values.shield_size = 8
+} else if(picture.shield.currentitem == "Arc9.png"){
+	values.shield_size = 9
+} else if(picture.shield.currentitem == "Arc10.png"){
+	values.shield_size = 10
+} else if(picture.shield.currentitem == "Arc10.png"){
+	values.shield_size = 10
+}else if(picture.shield.currentitem == "Arc11.png"){
+	values.shield_size = 11
+} else if(picture.shield.currentitem == "Arc12.png"){
+	values.shield_size = 12
+} else if(picture.shield.currentitem == "Arc13.png"){
+	values.shield_size = 13
+} else if(picture.shield.currentitem == "Arc14.png"){
+	values.shield_size = 14
+} else if(picture.shield.currentitem == "Arc15.png"){
+	values.shield_size = 15
+} else if(picture.shield.currentitem == "Arc16.png"){
+	values.shield_size = 16
+} else if(picture.shield.currentitem == "Arc17.png"){
+	values.shield_size = 17
+} else if(picture.shield.currentitem == "Arc18.png"){
+	values.shield_size = 18
+} else if(picture.shield.currentitem == "Arc19.png"){
+	values.shield_size = 19
+} else if(picture.shield.currentitem == "Arc20.png"){
+	values.shield_size = 20
+} else if(picture.shield.currentitem == "Arc21.png"){
+	values.shield_size = 21
+} else if(picture.shield.currentitem == "Arc22.png"){
+	values.shield_size = 22
+} else if(picture.shield.currentitem == "Arc23.png"){
+	values.shield_size = 23
+} else if(picture.shield.currentitem == "Arc24.png"){
+	values.shield_size = 24
+} else if(picture.shield.currentitem == "Arc25.png"){
+	values.shield_size = 25
+} else if(picture.shield.currentitem == "Arc26.png"){
+	values.shield_size = 26
+} else if(picture.shield.currentitem == "Arc27.png"){
+	values.shield_size = 27
+} else if(picture.shield.currentitem == "Arc28.png"){
+	values.shield_size = 28
+}else if(picture.shield.currentitem == "Arc29.png"){
+	values.shield_size = 29
+}else if(picture.shield.currentitem == "Arc30.png"){
+	values.shield_size = 30
+} else if(picture.shield.currentitem == "Arc31.png"){
+	values.shield_size = 31
+} else if(picture.shield.currentitem == "Arc32.png"){
+	values.shield_size = 32
+} else if(picture.shield.currentitem == "Arc33.png"){
+	values.shield_size = 33
+} else if(picture.shield.currentitem == "Arc34.png"){
+	values.shield_size = 34
+} else if(picture.shield.currentitem == "Arc35.png"){
+	values.shield_size = 35
+} else if(picture.shield.currentitem == "Arc36.png"){
+	values.shield_size = 36
+} else if(picture.shield.currentitem == "Arc37.png"){
+	values.shield_size = 37
+} else if(picture.shield.currentitem == "Arc38.png"){
+	values.shield_size = 38
+}else if(picture.shield.currentitem == "Arc39.png"){
+	values.shield_size = 39
+}else if(picture.shield.currentitem == "Arc40.png"){
+	values.shield_size = 40
+} else if(picture.shield.currentitem == "Arc41.png"){
+	values.shield_size = 41
+} else if(picture.shield.currentitem == "Arc42.png"){
+	values.shield_size = 42
+} else if(picture.shield.currentitem == "Arc43.png"){
+	values.shield_size = 43
+} else if(picture.shield.currentitem == "Arc44.png"){
+	values.shield_size = 44
+} else if(picture.shield.currentitem == "Arc45.png"){
+	values.shield_size = 45
+} else if(picture.shield.currentitem == "Arc46.png"){
+	values.shield_size = 46
+} else if(picture.shield.currentitem == "Arc47.png"){
+	values.shield_size = 47
+} else if(picture.shield.currentitem == "Arc48.png"){
+	values.shield_size = 48
+}else if(picture.shield.currentitem == "Arc49.png"){
+	values.shield_size = 49
+}else if(picture.shield.currentitem == "Arc50.png"){
+	values.shield_size = 50
+} else if(picture.shield.currentitem == "Arc51.png"){
+	values.shield_size = 51
+} else if(picture.shield.currentitem == "Arc52.png"){
+	values.shield_size = 52
+} else if(picture.shield.currentitem == "Arc53.png"){
+	values.shield_size = 53
+} else if(picture.shield.currentitem == "Arc54.png"){
+	values.shield_size = 54
+} else if(picture.shield.currentitem == "Arc55.png"){
+	values.shield_size = 55
+} else if(picture.shield.currentitem == "Arc56.png"){
+	values.shield_size = 56
+} else if(picture.shield.currentitem == "Arc57.png"){
+	values.shield_size = 57
+} else if(picture.shield.currentitem == "Arc58.png"){
+	values.shield_size = 58
+}else if(picture.shield.currentitem == "Arc59.png"){
+	values.shield_size = 59
+}else if(picture.shield.currentitem == "Arc60.png"){
+	values.shield_size = 60
+};
 }
+
 
 </expressions>
 **************************************************************************************************************
@@ -408,7 +555,8 @@ time,
 blockcode,
 trialcode,	 // General information
 list.Condition.currentvalue,
-values.cond, 
+values.cond,
+values.condcolor, 
 values.percentTrialsStay,
 values.practiceblock, 
 values.cannon, 
@@ -416,16 +564,24 @@ values.conc,
 values.blocknum,
 values.trialnum, 
 values.StaySwitch, // did cannon stick to pattern or deviate? 
+values.TAC, //Trials after changepoint
 values.hitmiss,
 values.angmu,
 values.ang,
 values.outcome,
 values.placementAngle,
+values.prev_placementAngle,
 trial.placeshield_mouse.latency, 
-values.blockearnings, 
 values.cannonballs_caught, 
 values.cannonballs_missed, 
 values.totalearnings, 
+expressions.angleup, 
+expressions.angledown,
+values.outcomeindex, 
+values.update,
+values.distmean,
+values.shield_size,
+values.blockearnings, 
 block.InstructionBlock.timestamp,
 trial.begin_block.timestamp,
 trial.mainloop.timestamp,
@@ -433,10 +589,6 @@ trial.placeshield_mouse.timestamp,
 trial.showPE.timestamp, 
 trial.cannon_outcome.timestamp,
 picture.shield.currentitem,
-list.previouspos.currentitem,
-expressions.angleup, 
-expressions.angledown,
-values.outcomeindex, 
 ) // Block level variables		
 
 </data>
@@ -511,7 +663,7 @@ Instructions Trials
 	};
 	values.StaySwitch = 0;
 	values.cond= 0;
-	values.ang = 0;
+	values.outcome = 0;
 	values.practiceblock = 1;
 	values.instructshield = 1;
 	shape.ClicktoContinue.vposition = 80%;
@@ -633,7 +785,7 @@ Instructions Trials
 			trial.cannon_outcome;
 		}
 	} else if (values.placementAngle - 3 < 0){
-		if (values.ang >= (values.placementAngle - 3 + 360)) {
+		if (values.outcome >= (values.placementAngle - 3 + 360)) {
 			values.hitmiss = 1;	
 			if (values.practiceblock == 1) {
 				values.outcomeindex = 3;
@@ -978,7 +1130,7 @@ Experimental Block instructions
 / recorddata = false
 / ontrialbegin = [
 	if(values.cond == "CHANGEPOINT") {
-		text.description.textcolor = azure
+		text.description.textcolor = lightskyblue
 	} else if (values.cond == "ODDBALL") {
 		text.description.textcolor = lightsalmon
 	}
@@ -1071,14 +1223,14 @@ if (values.practiceblock == 1) {
 			values.outcome = expressions.angsurprise; //cannonball	
 		} else if (values.cond == "CHANGEPOINT") { //Changepoint
 			values.angmu = expressions.angsurprise; //cannon
-			values.outcome = expressions.outcome; //cannonball
+			values.outcome = expressions.calculateoutcome; //cannonball
 			}
    } else if (values.StaySwitch == 0) { //stay
 		if (values.cond == "ODDBALL"){ //Oddball
 			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
-			values.outcome = expressions.outcome; //cannonnball location
+			values.outcome = expressions.calculateoutcome; //cannonnball location
 		} else if (values.cond== "CHANGEPOINT") {
-			values.outcome = expressions.outcome; // cannnonball
+			values.outcome = expressions.calculateoutcome; // cannnonball
 			}
    }
 } else if (values.practiceblock == 5) {
@@ -1090,14 +1242,14 @@ if (values.practiceblock == 1) {
 			values.outcome = expressions.angsurprise; //cannonball	
 		} else if (values.cond== "CHANGEPOINT") { 
 			values.angmu = expressions.angsurprise; //cannon
-			values.outcome = expressions.outcome; //cannonball
+			values.outcome = expressions.calculateoutcome; //cannonball
 			} 
 		} else if (values.StaySwitch == 0) {
 		if (values.cond== "ODDBALL"){ //Oddball
 			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
-			values.outcome = expressions.outcome; //cannonnball location
+			values.outcome = expressions.calculateoutcome; //cannonnball location
 		} else if (values.cond== "CHANGEPOINT") {
-			values.outcome = expressions.outcome; // cannnonball
+			values.outcome = expressions.calculateoutcome; // cannnonball
 			}
 		}
 } else if (values.practiceblock == 6) {
@@ -1109,15 +1261,15 @@ if (values.practiceblock == 1) {
 			values.outcome = expressions.angsurprise; //cannonball
 		} else if (values.cond == "CHANGEPOINT") { 
 			values.angmu = expressions.angsurprise; //cannon
-			values.outcome = expressions.outcome; //cannonball
+			values.outcome = expressions.calculateoutcome; //cannonball
 			values.TAC += 1; // Trials after changepoint
 			} 
 		} else if (values.StaySwitch == 0) {
 		if (values.cond== "ODDBALL"){ //Oddball
 			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
-			values.outcome = expressions.outcome; //cannonnball location
+			values.outcome = expressions.calculateoutcome; //cannonnball location
 		} else if (values.cond== "CHANGEPOINT") {
-			values.outcome = expressions.outcome; // cannnonball
+			values.outcome = expressions.calculateoutcome; // cannnonball
 			}
 		}
 	}; 
@@ -1152,9 +1304,9 @@ if (values.practiceblock == 1) {
 /ontrialend = [
     values.selected_x = 1px*trial.placeshield_mouse.responsex;
 	values.selected_y = 1px*trial.placeshield_mouse.responsey;
+	values.prev_placementAngle = values.placementAngle;
 	expressions.calculateSelectedPosition;
 	values.placementAngle = values.placementAngle;
-	list.previouspos.appenditem(values.placementAngle);
 	]
 / branch = [
 	if(trial.placeshield_mouse.response == "responsearea") {
@@ -1222,19 +1374,24 @@ if (values.practiceblock == 1) {
 		values.cannon = 1;
 	};
 ]
+/ ontrialend = [
+	values.shield_size = expressions.calculateshieldsize;
+	values.update = abs(values.prev_placementAngle - values.placementAngle);
+]
+
 / branch = [
-	if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber + 2) && values.outcome >= (values.placementAngle- abs(picture.shield.currentitemnumber -2))){
+	if (values.outcome <= (values.placementAngle + abs(values.shield_size*.5)) && values.outcome >= (values.placementAngle - abs(values.shield_size*.5))){
 		values.hitmiss = 1;
 		values.outcomeindex = 5;
 		values.cannonballs_caught += 1;
-	} else if (values.placementAngle + picture.shield.currentitemnumber + 2 >= 360){
-		if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber - 362)) {
+	} else if (values.placementAngle + abs(values.shield_size*.5) >= 360){
+		if (values.outcome <= (values.placementAngle + abs(values.shield_size*.5) - 360)) {
 			values.hitmiss = 1;
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
 			}
-	} else if (values.placementAngle - picture.shield.currentitemnumber < 0){
-		if (values.outcome >= (values.placementAngle - picture.shield.currentitemnumber + 360 + 2)){
+	} else if (values.placementAngle - values.shield_size < 0){
+		if (values.outcome >= (values.placementAngle - abs(values.shield_size*.5) + 360)){
 			values.hitmiss = 1;	
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
@@ -1282,7 +1439,7 @@ if (values.practiceblock == 1) {
 
 
 <trial cannon_outcome>
-/ stimulusframes = [1 = Outcome, ClicktoContinue, ClickBoxToContinue]
+/ stimulusframes = [1 = Outcome, ClicktoContinue, ClickBoxToContinue, ]
 / recorddata = true
 / timeout = 2000
 / inputdevice = mouse
@@ -1295,6 +1452,7 @@ if (values.practiceblock == 1) {
 		trial.cannon_outcome.timeout = 3000;
 		text.Outcome.textcolor = black;	
 		values.no_response += 1;
+		values.shield_size = "NA";
 	} else if (values.outcomeindex == 3) {
 		trial.cannon_outcome.timeout = 5000;
 		text.Outcome.textcolor = black;
@@ -1406,7 +1564,7 @@ Reset Blocks
 ]
 / ontrialend = [
 	values.angmu = expressions.angsurprise;
-	values.ang = expressions.outcome;
+	values.outcome = expressions.calculateoutcome;
 	values.cannonballs_caught = 0;
 	values.cannonballs_missed = 0;
 	
