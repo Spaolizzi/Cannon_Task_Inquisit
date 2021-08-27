@@ -54,6 +54,13 @@ Creating image stimuli
 / erase = false
 </picture>
 
+<picture keyboard_diagram_reference>
+/ items = ("keyboard_demo.svg")
+/ size  = (300px, 300px))
+/ position = (50%,85%)
+/ rotation = 0
+</picture>
+
 <picture shield_center>
 / items = ("Arc1.png")
 / size = (500px, 500px))
@@ -229,7 +236,7 @@ Creating Text stimuli for instructions
 </text>
 
 <text ValueTracker>
-/ items = ("shield_size = <%values.angmu%>
+/ items = ("angmu = <%values.angmu%>
 ~n cannonball rotation = <%picture.cannonball.rotation%>
 ~n block earnings = <%values.blockearnings%>
 ~n cannonballs caught <%values.cannonballs_caught%>
@@ -294,7 +301,6 @@ Values which will be updated during the trials
 / TAC = 0 // trials after changepoint
 / update = 0 // absolute size of update from previous shield position
 /distmean = 0 // distance of placement from current angmu
-/ no_response = 0
 
 
 //values for calculating response angle
@@ -323,8 +329,8 @@ Useful expressions
 <expressions>
 /percentTrialsSwitch = 1-values.percentTrialsStay
 / circleproportion = 0.25
-/ angleup = values.placementAngle + picture.shield.currentitemnumber + 2
-/ angledown = values.placementAngle- picture.shield.currentitemnumber -2
+/ angleup = values.placementAngle+ picture.shield.currentitemnumber
+/ angledown = values.placementAngle- picture.shield.currentitemnumber
 / angoddball = randgaussian(0, 2.99)
 / centsearned = values.cannonballs_caught*values.centsearned
 / outcome = randgaussian(values.angmu, values.conc)
@@ -473,7 +479,7 @@ Instructions Trials
 / validresponse = (Clicktocontinue)
 / correctresponse = (Clicktocontinue)
 / ontrialbegin = [
-	if ( values.practiceblock >= 60){
+	if ( values.practiceblock >= 3){
 		shape.ClicktoContinue.vposition = 50%;
 		text.Phase_starts.vposition = 30%;
 	} else {
@@ -525,6 +531,7 @@ Instructions Trials
 
 <trial Instructions_PlaceShield_delay>
 / stimulusframes = [1 = responsearea, cannon, wall, shield_center, Instructions_shield, ClickBoxToContinue,  ClicktoContinue]
+/ timeout = 15000
 / inputdevice = mouse
 / validresponse = (Clicktocontinue)
 / correctresponse = (Clicktocontinue)
@@ -587,6 +594,7 @@ Instructions Trials
 / stimulustimes = [1 = responsearea, cannon, wall, Instructions_shield]
 / inputdevice = mouse
 / correctresponse = (responsearea)
+/ timeout = 5000
 / ontrialbegin = [
 	picture.shield_center.rotation = 20;
 	values.warning_text = 1;
@@ -659,6 +667,7 @@ Instructions Trials
 / inputdevice = mouse
 / validresponse = (Clicktocontinue)
 / correctresponse = (Clicktocontinue)
+/ timeout = 10 000
 / ontrialbegin = [
 	 values.practiceblock = 2;
 	 if (values.instructshield == 3){
@@ -795,36 +804,6 @@ Instructions Trials
 ]
 / branch = [
 	trial.mainloop
-]
-</trial>
-
-
-<text areyouthere>
-/ items = ("Are you still there? You will be automatically timed out of the experiment in 10 seconds. 
-~n Given you cannot save your work, this may impact your final compensation.") 
-/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
-/ position = (50%, 50%)
-/ size = (80%, 50%)
-/ txbgcolor = white
-/ hjustify = center
-/ vjustify = center
-</text>
-
-
-<trial areyouthere>
-/ stimulusframes = [1 = areyouthere, ClickBoxToContinue,  ClicktoContinue,]
-/ inputdevice = mouse
-/ validresponse = (Clicktocontinue)
-/ correctresponse = (Clicktocontinue)
-/ timeout = 10000
-/ ontrialbegin = [
-	shape.ClicktoContinue.vposition = 80%;
-	text.ClickBoxToContinue.vposition = 85%;
-]
-/ branch = [
-	if (trial.placeshield_mouse.response == ClicktoContinue){
-		trial.mainloop
-	} 
 ]
 </trial>
 
@@ -976,13 +955,6 @@ Experimental Block instructions
 / validresponse = (Clicktocontinue)
 / correctresponse = (Clicktocontinue)
 / recorddata = false
-/ ontrialbegin = [
-	if(values.cond == "CHANGEPOINT") {
-		text.description.textcolor = azure
-	} else if (values.cond == "ODDBALL") {
-		text.description.textcolor = lightsalmon
-	}
-]
 / branch = [
 	return trial.youwillnotsee
 ]
@@ -1163,8 +1135,6 @@ if (values.practiceblock == 1) {
 	}
 	else if (trial.placeshield_mouse.response == 0){
 		values.outcomeindex = 1;
-		values.placementAngle = "NA";
-		picture.shield_center.rotation = "NA";
 		return trial.cannon_outcome;
 	} else {
 		return trial.placeshield_mouse
@@ -1196,7 +1166,7 @@ if (values.practiceblock == 1) {
 	if (floor(values.placementAngle/360 >= 1)){
 		values.placementAngle = values.placementAngle-360;
 	} else if (floor(values.placementAngle/360 <= 0)){
-		values.placementAngle = values.placementAngle + 360; 
+		values.placementAngle = values.placementAngle+ 360; 
 	 };
 	values.update = abs(list.previouspos.currentvalue - values.placementAngle);
 	values.distmean = abs(values.angmu - values.placementangle);
@@ -1223,18 +1193,18 @@ if (values.practiceblock == 1) {
 	};
 ]
 / branch = [
-	if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber + 2) && values.outcome >= (values.placementAngle- abs(picture.shield.currentitemnumber -2))){
+	if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber +1) && values.outcome >= (values.placementAngle- picture.shield.currentitemnumber +1)){
 		values.hitmiss = 1;
 		values.outcomeindex = 5;
 		values.cannonballs_caught += 1;
-	} else if (values.placementAngle + picture.shield.currentitemnumber + 2 >= 360){
-		if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber - 362)) {
+	} else if (values.placementAngle + picture.shield.currentitemnumber >= 360){
+		if (values.outcome <= (values.placementAngle + picture.shield.currentitemnumber - 360 +1)) {
 			values.hitmiss = 1;
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
 			}
 	} else if (values.placementAngle - picture.shield.currentitemnumber < 0){
-		if (values.outcome >= (values.placementAngle - picture.shield.currentitemnumber + 360 + 2)){
+		if (values.outcome >= (values.placementAngle- picture.shield.currentitemnumber + 360 +1)){
 			values.hitmiss = 1;	
 			values.outcomeindex = 5;
 			values.cannonballs_caught += 1;
@@ -1243,7 +1213,6 @@ if (values.practiceblock == 1) {
 			values.hitmiss = 0;	
 			values.outcomeindex = 1;
 			values.cannonballs_missed += 1;
-			values.placementAngle = "NA";
 	} else {
 		values.cannonballs_missed += 1;
 		values.hitmiss = 0;			
@@ -1292,9 +1261,8 @@ if (values.practiceblock == 1) {
 	if (values.outcomeindex == 2) {
 		trial.cannon_outcome.timeout = 3000;	
 	} else if (values.outcomeindex == 1) {
-		trial.cannon_outcome.timeout = 3000;
+		trial.cannon_outcome.timeout = 2000;
 		text.Outcome.textcolor = black;	
-		values.no_response += 1;
 	} else if (values.outcomeindex == 3) {
 		trial.cannon_outcome.timeout = 5000;
 		text.Outcome.textcolor = black;
@@ -1334,14 +1302,10 @@ if (values.practiceblock == 1) {
 	if (values.outcomeindex == 3) {
 		return trial.Instructions_RevealShield;
 	} else if (values.outcomeindex == 1) {
-		if (values.trialnum >= 60 && values.practiceblock == 6){
+		if (values.trialnum >= 3 && values.practiceblock == 6){
 			return trial.Howyoudid; 
-		 } else if (values.practiceblock == 6 && values.trialnum < 61){
-			if (values.no_response >= 5) {
-			return trial.areyouthere
-			} else {
-			 return trial.mainloop; 
-			 }
+		 } else if (values.practiceblock == 6 && values.trialnum < 3){
+			return trial.mainloop; 
 		 } else if (values.practiceblock == 1) {
 			 return trial.Instructions_PlaceShield;
 		 }
@@ -1351,9 +1315,9 @@ if (values.practiceblock == 1) {
 				return trial.Reminder;
 				values.cannonballs_missed = 0;
 			}	
-		} else if (values.trialnum >= 60 && values.practiceblock == 6){
+		} else if (values.trialnum >= 3 && values.practiceblock == 6){
 			return trial.Howyoudid; 
-		 } else if (values.practiceblock == 6 && values.trialnum < 60){
+		 } else if (values.practiceblock == 6 && values.trialnum < 3){
 			return trial.mainloop; 
 		 } else if (values.practiceblock != 6) {
 			if (values.cannonballs_caught < 2){
@@ -1361,9 +1325,9 @@ if (values.practiceblock == 1) {
 			}
 		}
 	} else if (values.outcomeindex == 5) {
-		if (values.trialnum >= 60 && values.practiceblock == 6){
+		if (values.trialnum >= 3 && values.practiceblock == 6){
 			return trial.Howyoudid; 
-		 } else if (values.practiceblock == 6 && values.trialnum < 60){
+		 } else if (values.practiceblock == 6 && values.trialnum < 3){
 			return trial.mainloop; 
 		 } else if (values.practiceblock != 6) {
 			if (values.cannonballs_caught < 2){
@@ -1551,12 +1515,9 @@ Experiment Sequence
 / blocks = [ 
 1 = InstructionBlock;
 2 = begin_round;
-3-6 = Mainblock;
-7 = begin_round;
-8-11 = Mainblock;
-12 = Experiment_end;
+3 = Experiment_end;
 ]
-/ stop=[trial.areyouthere.response == 0 && values.no_response >= 5]
+
 </expt>
 
 
