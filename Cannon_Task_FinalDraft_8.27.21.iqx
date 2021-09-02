@@ -974,7 +974,7 @@ Instructions Trials
 	values.trialnum = values.trialnum;
 ]
 / branch = [
-	if (trial.placeshield_mouse.response == ClicktoContinue){
+	if (trial.areyouthere.response == ClicktoContinue){
 		return trial.placeshield_mouse;
 	} 
 ]
@@ -1277,6 +1277,11 @@ if (values.practiceblock == 1) {
 	picture.cannon.rotation = values.angmu;
 	picture.cannonball.rotation = values.outcome;
 	list.previouspos.appenditem(values.placementAngle);
+	if (values.outcome >= 360){
+		values.outcome = values.outcome-360;
+	} else if (values.outcome < 0){
+		values.outcome = values.outcome + 360; 
+	 };
 ]
 
 / branch = [
