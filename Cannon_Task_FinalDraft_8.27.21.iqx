@@ -284,9 +284,11 @@ Initializing lists for probabilistic selection
 / selectionmode = random
 </list>
 
-<list previouspos>
-/ items = (0) // 1 = oddball, 2 = changepoint
-/ poolsize = 1
+
+<list color_num>
+/ items = (1,2) // 1 = oddball, 2 = changepoint
+/ poolsize = 2
+/ selectionmode = random
 </list>
 
 **************************************************************************************************************
@@ -311,7 +313,7 @@ Values which will be updated during the trials
 / cannonballs_missed = 0
 / rand = 0
 / trialnum = 0
-/ conc = 18.775
+/ driftConc = 18.775
 / experimentname = "Cannonball Task"
 / blocknum = 0
 /pacetocontinue = 1
@@ -319,8 +321,8 @@ Values which will be updated during the trials
 / condcolor = 0
 / blockearnings = 0
 / TAC = 0 // trials after changepoint
-/ update = 0 // size of update from previous shield position
-/ distmean = 0 // distance of placement from current angmu
+/ UP = 0 // size of update from previous shield position
+/ distMean = 0 // distance of placement from current angmu
 / no_response = 0
 / shield_size = 3
 /prev_placementAngle = 0
@@ -357,7 +359,7 @@ Useful expressions
 / calculateangledown = values.placementAngle- (values.shield_size/2)
 / angoddball = randgaussian(0, 2.99)
 / centsearned = values.cannonballs_caught*values.centsearned
-/ calculateoutcome = randgaussian(values.angmu, values.conc)
+/ calculateoutcome = randgaussian(values.angmu, values.driftConc)
 / angsurprise = rand(0, 360)
 //Expressions for calculating angles
 / centerx = 0.5*display.canvaswidth
@@ -552,14 +554,14 @@ subject,
 date, 
 time, 
 blockcode,
-trialcode,	 // General information
+trialcode, // General information
 list.Condition.currentvalue,
 values.cond,
 values.condcolor, 
 values.percentTrialsStay,
 values.practiceblock, 
 values.cannon, 
-values.conc, 
+values.driftConc, 
 values.blocknum,
 values.trialnum, 
 values.StaySwitch, // did cannon stick to pattern or deviate? 
@@ -576,11 +578,11 @@ values.totalearnings,
 values.angleup, 
 values.angledown,
 values.outcomeindex, 
-values.update,
+values.UP,
 values.distmean,
 values.shield_size,
 values.blockearnings, 
-block.InstructionBlock.timestamp,
+trial.placeshield_mouse.trialduration
 trial.begin_block.timestamp,
 trial.mainloop.timestamp,
 trial.placeshield_mouse.timestamp,
@@ -1129,9 +1131,9 @@ Experimental Block instructions
 / correctresponse = (Clicktocontinue)
 / recorddata = false
 / ontrialbegin = [
-	if(values.cond == "CHANGEPOINT") {
+	if(values.condcolor == "BLUE") {
 		text.description.textcolor = lightskyblue
-	} else if (values.cond == "ODDBALL") {
+	} else if (values.condcolor == "ORANGE") {
 		text.description.textcolor = lightsalmon
 	}
 ]
@@ -1263,7 +1265,7 @@ if (values.practiceblock == 1) {
 		} else if (values.cond == "CHANGEPOINT") { 
 			values.angmu = expressions.angsurprise; //cannon
 			values.outcome = expressions.calculateoutcome; //cannonball
-			values.TAC == 0; // Trials after changepoint
+			values.TAC = 0; // Trials after changepoint
 			} 
 		} else if (values.StaySwitch == 0) {
 		if (values.cond== "ODDBALL"){ //Oddball
@@ -1276,7 +1278,6 @@ if (values.practiceblock == 1) {
 	}; 
 	picture.cannon.rotation = values.angmu;
 	picture.cannonball.rotation = values.outcome;
-	list.previouspos.appenditem(values.placementAngle);
 	if (values.outcome >= 360){
 		values.outcome = values.outcome-360;
 	} else if (values.outcome < 0){
@@ -1356,8 +1357,6 @@ if (values.practiceblock == 1) {
 	} else if (floor(values.placementAngle/360 <= 0)){
 		values.placementAngle = values.placementAngle + 360; 
 	 };
-	values.update = abs(list.previouspos.currentvalue - values.placementAngle);
-	values.distmean = abs(values.angmu - values.placementangle);
 	 
 ]
 / branch = [
@@ -1382,7 +1381,10 @@ if (values.practiceblock == 1) {
 ]
 / ontrialend = [
 	values.shield_size = expressions.calculateshieldsize;
-	values.update = abs(values.prev_placementAngle - values.placementAngle);
+	values.UP = abs(values.prev_placementAngle - values.placementAngle);
+	if (values.UP > 180){
+		values.UP = 360 - values.UP;
+	} 
 	values.angleup = expressions.calculateangleup;
 	values.angledown = expressions.calculateangledown;
 ]
@@ -1686,13 +1688,14 @@ Experiment Sequence
 	values.trialnum = 0;
 	values.practiceblock = 4;
 	values.cond= list.Condition.nextvalue;
+	list.color_num.nextvalue;
 	values.blocknum = 0;
 	text.Phase_Starts.textbgcolor = white;
 	text.ClickBoxToContinue.textbgcolor = white;
-	if (values.cond== "ODDBALL") { //oddball
+	if (list.color_num.currentvalue == 1) { //oddball
 			shape.responsearea.color = lightsalmon;	
 			values.condcolor = "ORANGE";
-		} else if (values.cond == "CHANGEPOINT") { 
+		} else if (list.color_num.currentvalue == 2) { 
 			shape.responsearea.color = azure;
 			values.condcolor = "BLUE";	
 			} 
