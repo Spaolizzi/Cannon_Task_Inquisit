@@ -1261,6 +1261,7 @@ if (values.practiceblock == 1) {
 	values.StaySwitch = list.StayorSwitch.nextvalue;
     if (values.StaySwitch == 1){ //switch
 		if (values.cond== "ODDBALL") { //oddball
+			values.angmu = values.angmu + expressions.angoddball; //adding random walk to cannon
 			values.outcome = expressions.angsurprise; //cannonball
 		} else if (values.cond == "CHANGEPOINT") { 
 			values.angmu = expressions.angsurprise; //cannon
@@ -1279,17 +1280,19 @@ if (values.practiceblock == 1) {
 	picture.cannon.rotation = values.angmu;
 	picture.cannonball.rotation = values.outcome;
 	if (values.outcome >= 360){
+	list.previouspos.appenditem(values.placementAngle);
+	if (floor(values.outcome/360 >= 1)){
 		values.outcome = values.outcome-360;
-	} else if (values.outcome < 0){
+	} else if (floor(values.outcome/360 <= 0)){
 		values.outcome = values.outcome + 360; 
 	 };
+	
 ]
 
 / branch = [
 	return trial.placeshield_mouse;
 ]
 </trial>
-
 
 <trial placeshield_mouse>
 / stimulusframes = [1 = responsearea, wall, cannon]
@@ -1677,7 +1680,7 @@ Experiment Sequence
 7 = PracticeBlock_CannonMoves;
 8 = PracticeBlock_CannonNotAccurate;
 9 = Clicktocontinue;
-10-12 = mainloop;
+10-11 = mainloop;
 13-15 = EndPractice;
 ]
 </block> 
