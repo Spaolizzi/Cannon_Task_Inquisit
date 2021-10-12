@@ -580,7 +580,6 @@ values.angleup,
 values.angledown,
 values.outcomeindex, 
 values.UP,
-values.distmean,
 values.shield_size,
 values.blockearnings, 
 picture.wall.stimulusonset.1,
@@ -1707,7 +1706,7 @@ Experiment Sequence
 			values.condcolor = "BLUE";	
 			};
 	if (list.color_num.currentindex == 1) {
-		values. cBal = values.cond
+		values.cBal = values.cond
 	}
 			
 ]
