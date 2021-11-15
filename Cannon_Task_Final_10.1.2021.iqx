@@ -326,7 +326,8 @@ Values which will be updated during the trials
 / distMean = 0 // distance of placement from current angmu
 / no_response = 0
 / shield_size = 3
-/prev_placementAngle = 0
+/ prev_placementAngle = 0
+/ total_trialnum = 0
 
 //values for calculating response angle
 / anglesize = 0
@@ -626,7 +627,7 @@ Instructions Trials
 / validresponse = (Clicktocontinue)
 / correctresponse = (Clicktocontinue)
 / ontrialbegin = [
-	if ( values.practiceblock >= 60){
+	if ( values.practiceblock >= 6){
 		shape.ClicktoContinue.vposition = 50%;
 		text.Phase_starts.vposition = 30%;
 	} else {
@@ -1019,7 +1020,6 @@ Experimental Block instructions
 	values.angmu = expressions.angsurprise;
 	shape.ClicktoContinue.vposition = 80%;
 	text.ClickBoxToContinue.vposition = 85%;
-
 	values.practiceblock = 4;
 	if (values.cond== "CHANGEPOINT") {
 		text.block_start.currentitemnumber == 2
@@ -1485,6 +1485,7 @@ if (values.practiceblock == 1) {
 		trial.cannon_outcome.timeout = 3000;	
 	} else if (values.outcomeindex == 1) {
 		trial.cannon_outcome.timeout = 3000;
+		values.total_trialnum == 0;
 		text.Outcome.textcolor = black;	
 		values.no_response += 1;
 		values.shield_size = "NA";
@@ -1493,6 +1494,7 @@ if (values.practiceblock == 1) {
 		text.Outcome.textcolor = black;
 		text.ClickBoxToContinue.textbgcolor = white;	
 		text.Outcome.textbgcolor = white;	
+		values.total_trialnum == 0;
 		shape.ClicktoContinue.vposition = 80%;
 		text.ClickBoxToContinue.vposition = 85%;
 	} else if (values.outcomeindex == 6) {
@@ -1500,9 +1502,11 @@ if (values.practiceblock == 1) {
 		shape.ClicktoContinue.vposition = 200%;
 		text.ClickBoxToContinue.vposition = 200%;
 		text.Outcome.textcolor = red;
+		values.total_trialnum += 1;
 		if (values.practiceblock != 6) {
 			text.ClickBoxToContinue.textbgcolor = white;
 			text.Outcome.textbgcolor = white;
+			values.total_trialnum == 0;
 		} else {
 			text.ClickBoxToContinue.textbgcolor = white;
 			text.Outcome.textbgcolor = white;
@@ -1512,9 +1516,11 @@ if (values.practiceblock == 1) {
 		text.Outcome.textcolor = green;
 		shape.ClicktoContinue.vposition = 200%;
 		text.ClickBoxToContinue.vposition = 200;
+		values.total_trialnum += 1;
 		if (values.practiceblock != 6) {
 			text.ClickBoxToContinue.textbgcolor = white;
 			text.Outcome.textbgcolor = white;
+			values.total_trialnum = 0;
 		} else {
 			text.ClickBoxToContinue.textbgcolor = white;
 			text.Outcome.textbgcolor = white;
@@ -1734,6 +1740,7 @@ Experiment Sequence
 	text.Phase_Starts.textbgcolor = "white";
 	text.ClickBoxToContinue.textbgcolor = "white";
 ]
+/ stop=[values.trialnum >= 60]
 / trials = [
 1 = Phase_starts;
 2 = mainloop;
@@ -1760,7 +1767,7 @@ Experiment Sequence
 8-11 = Mainblock;
 12 = Experiment_end;
 ]
-/ stop=[trial.areyouthere.response == 0]
+/ stop=[trial.areyouthere.response == 0; values.total_trialnum >= 480]
 </expt>
 
 
